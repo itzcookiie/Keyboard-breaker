@@ -1,0 +1,1 @@
+- Make canvas border more glossy
