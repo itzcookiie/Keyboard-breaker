@@ -1,7 +1,7 @@
 # Day 0
 
 ### Objectives
-- Set up typescript
-- Create canvas
-- Create game object
+- [ x ] Set up typescript
+- [ x ] Create canvas 
+- [ x ] Create game object
 - Create bricks?

@@ -1,1 +1,2 @@
 - Make canvas border more glossy
+- Create a Cord/Vector interface and use that when passing x, y data around

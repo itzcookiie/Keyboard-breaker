@@ -1,4 +1,4 @@
-import { GameLevel } from './game';
+import { GameLevel } from '../game';
 
 
 type BrickLevels = {
@@ -8,13 +8,15 @@ type BrickLevels = {
     };
 }
 
-const BRICK_SIZE = {
+export const BRICK_SETTINGS = {
     width: 50,
-    height: 50
+    height: 50,
+    color: '#FFFFFF',
+    keyColour: '#2596BE'
 }
 
 
-class BricksLevelConfig {
+export class BricksLevelConfig {
     keys = [
         ['1234567890'],
         ['ASDFGHJKL;'],
@@ -41,17 +43,15 @@ class BricksLevelConfig {
         return this.brickLevels[level];
     }
 
-    // TEST FUNCTION WORKS!
     generateBrickPositions(level: GameLevel) {
-        const config = this.getConfig(level);
-        const [xStartPos, yStartPos] = config.startPos;
-        const expandedKeys = this.keys.map(keyRow => keyRow.join('').split(''));
-        const keyObjects = expandedKeys.map((expandedKeyRow, rowIndex) => 
-        expandedKeyRow.map((key, colIndex) => {
-            const x = xStartPos + (colIndex * BRICK_SIZE.width) + config.gap;
-            const y = yStartPos + (rowIndex * BRICK_SIZE.height) + config.gap;
-            return {x, y, key}
-        }));
-        return keyObjects.flatMap(k => k);
+        const { startPos, gap } = this.getConfig(level);
+        const [xStartPos, yStartPos] = startPos;
+        return this.keys.flatMap((keyRow, rowIndex) => 
+            keyRow.join('').split('').map((key, colIndex) => ({
+                x: xStartPos + (colIndex * BRICK_SETTINGS.width) + gap,
+                y: yStartPos + (rowIndex * BRICK_SETTINGS.height) + gap,
+                key
+            })
+        ));
     }
-} 
+}
