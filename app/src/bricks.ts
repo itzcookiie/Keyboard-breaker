@@ -1,14 +1,6 @@
 import Game, { GameLevel } from './game';
-import { BricksLevelConfig, BRICK_SETTINGS } from './configs/bricksConfig';
+import { BricksConfig, BRICK_SETTINGS, BrickData, KEY_SETTINGS } from './configs/bricksConfig';
 
-
-interface BrickData {
-    x: number;
-    y: number;
-    key: string;
-}
-
-type BricksData = BrickData[];
 
 class Brick {
     data: BrickData;
@@ -26,12 +18,10 @@ class Brick {
 class Bricks {
     game: Game;
     data: Brick[];
-    bricksConfig: BricksLevelConfig;
 
     constructor(game: Game) {
         this.game = game;
-        this.bricksConfig = new BricksLevelConfig();
-        this.data = this.generateBricks(game.level);
+        this.data = this.generateBricks(game);
     }
 
     destroyBrick(brick: Brick): boolean {
@@ -45,12 +35,33 @@ class Bricks {
         }
     }
 
-    // TEST TO SEE IF THIS WORKS PROPERLY
     draw() {
+        this.drawBricks();
+        this.drawKeys();
+    }
+
+    drawBricks() {
+        if(!this.game.context) return;
+        const ctx = this.game.context;
+        ctx.save();
+        ctx.fillStyle = BRICK_SETTINGS.color;
         this.data.forEach(brick => {
-            if(!this.game.context) return;
-            this.game.context.fillRect(brick.data.x, brick.data.y, BRICK_SETTINGS.width, BRICK_SETTINGS.height);
+            ctx.fillRect(brick.data.x, brick.data.y, KEY_SETTINGS.width + BRICK_SETTINGS.padding, KEY_SETTINGS.height + BRICK_SETTINGS.padding);
         });
+        ctx.restore();
+    }
+
+    drawKeys() {
+        if(!this.game.context) return;
+        const ctx = this.game.context;
+        ctx.save();
+        ctx.fillStyle = KEY_SETTINGS.color;
+        ctx.font = "40px Arial";
+        ctx.textAlign = 'center';
+        BricksConfig.generateKeyPositions(this.game).forEach(key => {
+            ctx.fillText(key.key, key.x, key.y)
+        });
+        ctx.restore();
     }
     
 
@@ -59,12 +70,12 @@ class Bricks {
         return results.length ? results[0] : null;
     }
 
-    updateBricks(level: GameLevel) {
-        this.data = this.generateBricks(level);
+    updateBricks(game: Game) {
+        this.data = this.generateBricks(game);
     }
 
-    private generateBricks(level: GameLevel) {
-        const bricksData = this.bricksConfig.generateBrickPositions(level);
+    private generateBricks(game: Game): Brick[] {
+        const bricksData = BricksConfig.generateBrickPositions(game);
         return bricksData.map(brickData => new Brick({ ...brickData }));
     }
 }
