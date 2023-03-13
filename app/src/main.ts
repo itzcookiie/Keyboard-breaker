@@ -2,6 +2,7 @@ import './style.css';
 
 import Game, { GameLevel } from './game';
 import Bricks from './bricks';
+import Board from './board';
 
 
 // const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -19,6 +20,5 @@ import Bricks from './bricks';
 // }))
 
 const game = new Game();
-const brick = new Bricks(game);
-game.registerEntity(brick);
-game.draw();
+game.registerEntities(Bricks, Board);
+game.runGameLoop();

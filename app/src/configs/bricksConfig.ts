@@ -98,7 +98,7 @@ export class BricksConfig {
 
     private static calculateCanvasCenter(gap: number, canvasWidth: number): number {
         const numKeysInARow = this.calculateKeysInARow();
-        const rowDistance = canvasWidth - (numKeysInARow - 1) * (BRICK_SETTINGS.width + gap);
+        const rowDistance = canvasWidth - ((numKeysInARow - 1) * (BRICK_SETTINGS.width + gap + BRICK_SETTINGS.padding));
         return rowDistance / 2;
     }
 
