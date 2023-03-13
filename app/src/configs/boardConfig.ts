@@ -35,28 +35,24 @@ class BoardConfig {
         }
     }
 
-    private static levelOne(canvas: HTMLCanvasElement): BoardLevel {
+    private static calculateStartPos(canvas: HTMLCanvasElement): BoardLevel {
         const x = (canvas.width - BOARD_SETTINGS.width) / 2;
         const y = canvas.height * 0.8;
         return {
             startPos: [x, y]
         };
+    }
+
+    private static levelOne(canvas: HTMLCanvasElement): BoardLevel {
+        return this.calculateStartPos(canvas);
     }
 
     private static levelTwo(canvas: HTMLCanvasElement): BoardLevel {
-        const x = (canvas.width - BOARD_SETTINGS.width) / 2;
-        const y = canvas.height * 0.8;
-        return {
-            startPos: [x, y]
-        };
+        return this.calculateStartPos(canvas);
     }
 
     private static levelThree(canvas: HTMLCanvasElement): BoardLevel {
-        const x = (canvas.width - BOARD_SETTINGS.width) / 2;
-        const y = canvas.height * 0.8;
-        return {
-            startPos: [x, y]
-        };
+        return this.calculateStartPos(canvas);
     }
 
     

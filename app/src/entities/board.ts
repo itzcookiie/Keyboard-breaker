@@ -39,6 +39,35 @@ class Board {
         this.data.x = (x / canvasLength) * (this.game.canvas.width - BOARD_SETTINGS.width);
     }
 
+    getTopBorderCords() {
+        return Array.from({ length: BOARD_SETTINGS.width }, (_, i) => ({
+            x: this.data.x + i,
+            y: this.data.y
+        }));
+    }
+
+    getRightBorderCords() {
+        return Array.from({ length: BOARD_SETTINGS.height }, (_, i) => ({
+            x: this.data.x + BOARD_SETTINGS.width,
+            y: this.data.y + i
+        }));
+    }
+
+    getLeftBorderCords() {
+        return Array.from({ length: BOARD_SETTINGS.height }, (_, i) => ({
+            x: this.data.x,
+            y: this.data.y + i
+        }));
+    }
+
+    getBorderCords() {
+        return [
+            ...this.getTopBorderCords(),
+            ...this.getLeftBorderCords(),
+            ...this.getRightBorderCords()
+        ]
+    }
+
     reset() {
         this.data = BoardConfig.generatePosition(this.game);
     }
