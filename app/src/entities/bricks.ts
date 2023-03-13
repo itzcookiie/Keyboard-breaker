@@ -1,5 +1,6 @@
-import Game, { GameLevel } from './game';
-import { BricksConfig, BRICK_SETTINGS, BrickData, KEY_SETTINGS } from './configs/bricksConfig';
+import Game, { GameLevel } from '../game';
+import { BRICK_SETTINGS, KEY_SETTINGS } from '../constants';
+import { BricksConfig, BrickData } from '../configs/bricksConfig';
 
 
 class Brick {

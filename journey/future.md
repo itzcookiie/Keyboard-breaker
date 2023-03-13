@@ -1,2 +1,3 @@
 - Make canvas border more glossy
 - Create a Cord/Vector interface and use that when passing x, y data around
+- Create an index.js file in entities, export all entities there, then import the file using * syntax and loop over each entitiy instead of adding manually

@@ -1,4 +1,5 @@
 import Game, { GameLevel } from '../game';
+import { BRICK_SETTINGS, KEY_SETTINGS } from '../constants';
 
 
 interface BrickLevel {
@@ -14,21 +15,6 @@ export interface BrickData {
     x: number;
     y: number;
     key: string;
-}
-
-
-export const BRICK_SETTINGS = {
-    width: 50,
-    height: 50,
-    color: '#FFFFFF',
-    keyColour: '#2596BE',
-    padding: 20
-}
-
-export const KEY_SETTINGS = {
-    width: 40, // Longest text width (probably W?)
-    height: 45, // Longest text height (think all the same)
-    color: '#0039a6'
 }
 
 

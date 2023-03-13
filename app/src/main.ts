@@ -1,8 +1,9 @@
 import './style.css';
 
 import Game, { GameLevel } from './game';
-import Bricks from './bricks';
-import Board from './board';
+import Bricks from './entities/bricks';
+import Board from './entities/board';
+import Ball from './entities/ball';
 
 
 // const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -20,5 +21,5 @@ import Board from './board';
 // }))
 
 const game = new Game();
-game.registerEntities(Bricks, Board);
+game.registerEntities(Bricks, Board, Ball);
 game.runGameLoop();
