@@ -14,3 +14,9 @@ export enum BorderCordsSide {
 export interface BorderCords extends Vector {
     side: BorderCordsSide;
 }
+
+export interface BrickData {
+    x: number;
+    y: number;
+    key: string;
+}

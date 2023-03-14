@@ -27,6 +27,8 @@ class Game {
         this.timestamp = 0;
         this.entities = [];
         this.level = GameLevel.ONE;
+        // Added to future work
+        // this.attachEventListener();
     }
 
     getEntity(entityClass: EntityClass<Entity>): Entity | undefined {
@@ -39,6 +41,12 @@ class Game {
         const ctx = this.context;
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.entities.forEach(entityObj => entityObj.draw());
+    }
+
+    resizeCanvas(e: UIEvent) {
+        this.canvas.width = this.canvas.offsetWidth;
+        const aspectRatio = 1366 / 768;
+        this.canvas.height = this.canvas.width / aspectRatio;
     }
 
     registerEntity(entity: EntityClass<Entity>) {
@@ -55,6 +63,10 @@ class Game {
         // }
         requestAnimationFrame(this.runGameLoop.bind(this));
         this.draw();
+    }
+
+    attachEventListener() {
+        window.addEventListener('resize', this.resizeCanvas.bind(this));
     }
 }
 

@@ -28,6 +28,6 @@ export const KEY_SETTINGS = {
 export const BALL_SETTINGS = {
     radius: 10,
     color: COLORS.WHITE,
-    xVelocity: 1.6,
-    yVelocity: 1.6
+    xVelocity: 2.5,
+    yVelocity: 2.5
 }

@@ -6,7 +6,7 @@ import Board from './entities/board';
 import Ball from './entities/ball';
 
 
-// const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 // const ctx = canvas.getContext("2d");
 // ctx.font = "40px Arial";
 // const result = ctx?.measureText("Hello world");
@@ -20,6 +20,8 @@ import Ball from './entities/ball';
 //     console.log(`Result finish`)
 // }))
 
-const game = new Game();
-game.registerEntities(Bricks, Board, Ball);
-game.runGameLoop();
+window.document.addEventListener('DOMContentLoaded', () => {
+    const game = new Game();
+    game.registerEntities(Bricks, Board, Ball);
+    game.runGameLoop();
+})

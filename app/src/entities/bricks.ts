@@ -1,6 +1,7 @@
 import Game, { GameLevel } from '../game';
 import { BRICK_SETTINGS, KEY_SETTINGS } from '../constants';
-import { BricksConfig, BrickData } from '../configs/bricksConfig';
+import { BricksConfig } from '../configs/bricksConfig';
+import { BrickData } from '../types';
 
 
 class Brick {
@@ -19,21 +20,30 @@ class Brick {
 class Bricks {
     game: Game;
     data: Brick[];
+    keys: BrickData[]
 
     constructor(game: Game) {
         this.game = game;
         this.data = this.generateBricks(game);
+        this.keys = BricksConfig.generateKeyPositions(this.game);
     }
 
     destroyBrick(brick: Brick): boolean {
         const filteredData = this.data.filter(arrBrick => !arrBrick.matchCords(brick.data.x, brick.data.y));
         const success = filteredData.length < this.data.length;
-        if (success) {
-            this.data = filteredData;
-            return true;
-        } else {
-            return false;
-        }
+        if(!success) return false;
+        const destroyedKey = this.destroyKey(brick);
+        if(!destroyedKey) return false;
+        this.data = filteredData;
+        return true;
+    }
+
+    destroyKey(brick: Brick): boolean {
+        const filteredData = this.keys.filter(key => brick.data.key !== key.key);
+        const success = filteredData.length < this.data.length;
+        if(!success) return false;
+        this.keys = filteredData;
+        return true;
     }
 
     draw() {
@@ -59,7 +69,7 @@ class Bricks {
         ctx.fillStyle = KEY_SETTINGS.color;
         ctx.font = "40px Arial";
         ctx.textAlign = 'center';
-        BricksConfig.generateKeyPositions(this.game).forEach(key => {
+        this.keys.forEach(key => {
             ctx.fillText(key.key, key.x, key.y)
         });
         ctx.restore();

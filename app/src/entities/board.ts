@@ -27,9 +27,6 @@ class Board {
     moveBoard(e: MouseEvent) {
         if(!this.game.canvas) return;
         const x = e.offsetX;
-        const canvasBoundingRect = this.game.canvas.getBoundingClientRect();
-        const canvasNearX = canvasBoundingRect.left;
-        const canvasFarX = canvasBoundingRect.right;
         const canvasLength = this.game.canvas.offsetWidth;
 
         // If you move the mouse really fast past edge of canvas border left or right
@@ -37,7 +34,7 @@ class Board {
         // Potential fixes:
         // 1. Use event listener on body and say if mouse is beyond canvas border set board to 0 or canvas width
         // 2. Use Pointer Lock API
-        this.data.x = (x / canvasLength) * (this.game.canvas.width - BOARD_SETTINGS.width);
+        this.data.x = (e.offsetX / this.game.canvas.offsetWidth) * (this.game.canvas.width - BOARD_SETTINGS.width);
     }
 
     getTopBorderCords(): BorderCords[] {
@@ -84,6 +81,7 @@ class Board {
 
     attachEventListener() {
         this.game.canvas.addEventListener('mousemove', (e: MouseEvent) => this.moveBoard(e));
+        // this.game.canvas.addEventListener('click', (e) => console.log(this.data));
     }
 }
 

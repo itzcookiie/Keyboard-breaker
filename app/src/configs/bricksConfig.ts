@@ -1,5 +1,6 @@
 import Game, { GameLevel } from '../game';
 import { BRICK_SETTINGS, KEY_SETTINGS } from '../constants';
+import { BrickData } from '../types';
 
 
 interface BrickLevel {
@@ -9,12 +10,6 @@ interface BrickLevel {
 
 type BrickLevels = {
     [key in GameLevel]: BrickLevel;
-}
-
-export interface BrickData {
-    x: number;
-    y: number;
-    key: string;
 }
 
 
