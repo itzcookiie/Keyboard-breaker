@@ -1,10 +1,11 @@
-import Game, { GameLevel } from '../game';
+import Game from '../game';
 import { BRICK_SETTINGS, KEY_SETTINGS } from '../constants';
 import { BricksConfig } from '../configs/bricksConfig';
-import { BrickData } from '../types';
+import { BorderCordsData, BrickData } from '../types';
+import { getAllBorderCords } from '../lib';
 
 
-class Brick {
+export class Brick {
     data: BrickData;
 
     constructor(data: BrickData) {
@@ -73,6 +74,18 @@ class Bricks {
             ctx.fillText(key.key, key.x, key.y)
         });
         ctx.restore();
+    }
+
+    getBricksBorderCordsData(): BorderCordsData<Brick>[] {
+        return this.data.flatMap(brick => getAllBorderCords<Brick>({
+            entity: brick,
+            data: {
+                x: brick.data.x,
+                y: brick.data.y,
+                width: BRICK_SETTINGS.width,
+                height: BRICK_SETTINGS.height
+            }
+        }))
     }
     
 

@@ -1,7 +1,7 @@
-import Game, { GameLevel } from '../game';
+import Game from '../game';
 import BoardConfig from './boardConfig';
 import { BALL_SETTINGS, BOARD_SETTINGS } from '../constants';
-import { Vector } from '../types';
+import { Vector, GameLevel } from '../types';
 
 
 interface BallLevel {

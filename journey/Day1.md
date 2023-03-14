@@ -1,4 +1,4 @@
-# Day 0
+# Day 1
 
 ### Objectives
 - Create bricks

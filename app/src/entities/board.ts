@@ -1,8 +1,9 @@
 import Game from '../game';
 import { BOARD_SETTINGS } from '../constants';
-import { BorderCords, BorderCordsSide } from '../types';
+import { BorderCords, BorderCordsData, BorderCordsSide } from '../types';
 import BoardConfig from '../configs/boardConfig';
 import { Vector } from '../types';
+import { getBorderCords } from '../lib';
 
 
 class Board {
@@ -37,42 +38,46 @@ class Board {
         this.data.x = (e.offsetX / this.game.canvas.offsetWidth) * (this.game.canvas.width - BOARD_SETTINGS.width);
     }
 
-    getTopBorderCords(): BorderCords[] {
-        return Array.from({ length: BOARD_SETTINGS.width }, (_, i) => ({
-            x: this.data.x + i,
-            y: this.data.y,
-            side: i === 0 
-                ? BorderCordsSide.LEFT_CORNER 
-                : i === BOARD_SETTINGS.width - 1 
-                    ? BorderCordsSide.RIGHT_CORNER 
-                    : BorderCordsSide.TOP
-        }));
-    }
+    // getTopBorderCords(): BorderCords[] {
+    //     return Array.from({ length: BOARD_SETTINGS.width }, (_, i) => ({
+    //         x: this.data.x + i,
+    //         y: this.data.y,
+    //         side: i === 0 
+    //             ? BorderCordsSide.LEFT_CORNER 
+    //             : i === BOARD_SETTINGS.width - 1 
+    //                 ? BorderCordsSide.RIGHT_CORNER 
+    //                 : BorderCordsSide.TOP
+    //     }));
+    // }
 
-    getRightBorderCords(): BorderCords[] {
-        // Skip the right first cord since it's already generated in the top
-        return Array.from({ length: BOARD_SETTINGS.height - 1 }, (_, i) => ({
-            x: this.data.x + BOARD_SETTINGS.width,
-            y: this.data.y + i + 1,
-            side: BorderCordsSide.RIGHT
-        }));
-    }
+    // getRightBorderCords(): BorderCords[] {
+    //     // Skip the right first cord since it's already generated in the top
+    //     return Array.from({ length: BOARD_SETTINGS.height - 1 }, (_, i) => ({
+    //         x: this.data.x + BOARD_SETTINGS.width,
+    //         y: this.data.y + i + 1,
+    //         side: BorderCordsSide.RIGHT
+    //     }));
+    // }
 
-    getLeftBorderCords(): BorderCords[] {
-        // Skip the right first cord since it's already generated in the top
-        return Array.from({ length: BOARD_SETTINGS.height - 1 }, (_, i) => ({
-            x: this.data.x,
-            y: this.data.y + i + 1,
-            side: BorderCordsSide.LEFT
-        }));
-    }
+    // getLeftBorderCords(): BorderCords[] {
+    //     // Skip the right first cord since it's already generated in the top
+    //     return Array.from({ length: BOARD_SETTINGS.height - 1 }, (_, i) => ({
+    //         x: this.data.x,
+    //         y: this.data.y + i + 1,
+    //         side: BorderCordsSide.LEFT
+    //     }));
+    // }
 
-    getBorderCords() {
-        return [
-            ...this.getTopBorderCords(),
-            ...this.getLeftBorderCords(),
-            ...this.getRightBorderCords()
-        ]
+    getBorderCordsData(): BorderCordsData<this> {
+        return getBorderCords<this>({
+            entity: this,
+            data: {
+                x: this.data.x,
+                y: this.data.y,
+                height: BOARD_SETTINGS.height,
+                width: BOARD_SETTINGS.width
+            }
+        })
     }
 
     reset() {

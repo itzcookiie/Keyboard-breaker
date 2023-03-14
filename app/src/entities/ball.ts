@@ -4,7 +4,7 @@ import { BorderCordsSide } from '../types';
 import Game from "../game";
 import { Vector } from "../types";
 import Board from "./board";
-import Bricks from "./bricks";
+import Bricks, { Brick } from "./bricks";
 
 
 class Ball {
@@ -19,7 +19,7 @@ class Ball {
             x: 1, // +ve direction
             y: 1 // +ve direction
         }
-        this.attachEventListener();
+        // this.attachEventListener();
     }
 
     draw() {
@@ -31,13 +31,13 @@ class Ball {
         ctx.arc(this.data.x, this.data.y, BALL_SETTINGS.radius, 0, 2 * Math.PI);
         ctx.fill();
         ctx.restore();
-        // this.moveBall();
+        this.moveBall();
     }
 
     detectCollision() {
-        // this.detectGroundCollision();
-        // this.detectWallCollision();
-        // this.detectBoardCollision();
+        this.detectGroundCollision();
+        this.detectWallCollision();
+        this.detectBoardCollision();
         this.detectBrickCollision();
     }
 
@@ -58,7 +58,7 @@ class Ball {
     detectBoardCollision() {
         const board = this.game.getEntity(Board);
         if(!(board instanceof Board)) return;
-        const collision = board.getBorderCords().find(cords => this.isColliding(cords));
+        const collision = board.getBorderCordsData().cords.find(cords => this.isColliding(cords));
         if(collision) {
             console.log('Ball and board collision!');
             console.log(collision)
@@ -103,17 +103,27 @@ class Ball {
     }
 
     detectBrickCollision() {
-        // Find cords of all sides of bricks, then run isColliding function
-        // Basically same as board collision logic but for one brick
         const bricks = this.game.getEntity(Bricks);
         if(!(bricks instanceof Bricks)) return;
-        const collidedBrick = bricks.data.find(brick => {
-            console.log(brick.data.key);
-            return this.isColliding({x: brick.data.x, y: brick.data.y})
-        });
-        if(collidedBrick) {
+        const collidedBrick = bricks.getBricksBorderCordsData().find(brickBorderCordData => 
+            brickBorderCordData.cords.some(cord => this.isColliding({x: cord.x, y: cord.y}))
+        );
+        if(collidedBrick && collidedBrick.entity instanceof Brick) {
             console.log('Ball and brick collision!');
-            bricks.destroyBrick(collidedBrick);
+            const collision = collidedBrick.cords.find(cord => this.isColliding({x: cord.x, y: cord.y}));
+            if (!collision) return;
+            if(collision.side === BorderCordsSide.LEFT || collision.side === BorderCordsSide.RIGHT) {
+                this.direction.x *= -1;
+                // this.data.x = board.data.x - BALL_SETTINGS.radius;
+            } else if(collision.side === BorderCordsSide.LEFT_CORNER) {
+                this.direction.y *= -1;
+            } else if(collision.side === BorderCordsSide.RIGHT_CORNER) {
+                this.direction.y *= -1;
+            }
+            else {
+                this.direction.y *= -1;
+            }
+            bricks.destroyBrick(collidedBrick.entity);
         }
     }
 
@@ -121,7 +131,6 @@ class Ball {
         const xDistance = Math.abs(cords.x - this.data.x);
         const yDistance = Math.abs(cords.y - this.data.y);
         const distance = Math.sqrt(yDistance**2 + xDistance**2);
-        console.log(distance)
         return distance < BALL_SETTINGS.radius; 
     }
 

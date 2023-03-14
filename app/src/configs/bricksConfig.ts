@@ -1,6 +1,6 @@
-import Game, { GameLevel } from '../game';
+import Game from '../game';
 import { BRICK_SETTINGS, KEY_SETTINGS } from '../constants';
-import { BrickData } from '../types';
+import { BrickData, GameLevel } from '../types';
 
 
 interface BrickLevel {

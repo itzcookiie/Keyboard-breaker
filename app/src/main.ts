@@ -1,6 +1,6 @@
 import './style.css';
 
-import Game, { GameLevel } from './game';
+import Game from './game';
 import Bricks from './entities/bricks';
 import Board from './entities/board';
 import Ball from './entities/ball';

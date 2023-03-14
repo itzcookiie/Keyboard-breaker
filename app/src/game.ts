@@ -1,16 +1,8 @@
-import Bricks from './entities/bricks';
+import Bricks, { Brick } from './entities/bricks';
 import Board from './entities/board';
 import Ball from './entities/ball';
+import { Entity, EntityClass, GameLevel } from './types';
 
-export enum GameLevel {
-    ONE,
-    TWO,
-    THREE
-};
-
-
-type Entity = Bricks | Board | Ball;
-type EntityClass<T> = new (game: Game) => T;
 
 const STEP = 10;
 
