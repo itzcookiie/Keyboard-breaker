@@ -1,5 +1,6 @@
 import Game from '../game';
 import { BOARD_SETTINGS } from '../constants';
+import { BorderCords, BorderCordsSide } from '../types';
 import BoardConfig from '../configs/boardConfig';
 import { Vector } from '../types';
 
@@ -29,7 +30,7 @@ class Board {
         const canvasBoundingRect = this.game.canvas.getBoundingClientRect();
         const canvasNearX = canvasBoundingRect.left;
         const canvasFarX = canvasBoundingRect.right;
-        const canvasLength = canvasFarX - canvasNearX;
+        const canvasLength = this.game.canvas.offsetWidth;
 
         // If you move the mouse really fast past edge of canvas border left or right
         // The paddle won't move all the way to the  end. It will only get as far as it last recorded
@@ -39,24 +40,33 @@ class Board {
         this.data.x = (x / canvasLength) * (this.game.canvas.width - BOARD_SETTINGS.width);
     }
 
-    getTopBorderCords() {
+    getTopBorderCords(): BorderCords[] {
         return Array.from({ length: BOARD_SETTINGS.width }, (_, i) => ({
             x: this.data.x + i,
-            y: this.data.y
+            y: this.data.y,
+            side: i === 0 
+                ? BorderCordsSide.LEFT_CORNER 
+                : i === BOARD_SETTINGS.width - 1 
+                    ? BorderCordsSide.RIGHT_CORNER 
+                    : BorderCordsSide.TOP
         }));
     }
 
-    getRightBorderCords() {
-        return Array.from({ length: BOARD_SETTINGS.height }, (_, i) => ({
+    getRightBorderCords(): BorderCords[] {
+        // Skip the right first cord since it's already generated in the top
+        return Array.from({ length: BOARD_SETTINGS.height - 1 }, (_, i) => ({
             x: this.data.x + BOARD_SETTINGS.width,
-            y: this.data.y + i
+            y: this.data.y + i + 1,
+            side: BorderCordsSide.RIGHT
         }));
     }
 
-    getLeftBorderCords() {
-        return Array.from({ length: BOARD_SETTINGS.height }, (_, i) => ({
+    getLeftBorderCords(): BorderCords[] {
+        // Skip the right first cord since it's already generated in the top
+        return Array.from({ length: BOARD_SETTINGS.height - 1 }, (_, i) => ({
             x: this.data.x,
-            y: this.data.y + i
+            y: this.data.y + i + 1,
+            side: BorderCordsSide.LEFT
         }));
     }
 

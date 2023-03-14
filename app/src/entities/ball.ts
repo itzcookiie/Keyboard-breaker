@@ -1,5 +1,6 @@
 import BallConfig from "../configs/ballConfig";
 import { BALL_SETTINGS, BOARD_SETTINGS } from "../constants";
+import { BorderCordsSide } from '../types';
 import Game from "../game";
 import { Vector } from "../types";
 import Board from "./board";
@@ -38,8 +39,10 @@ class Ball {
     }
 
     detectWallCollision() {
-        if(this.data.x >= this.game.canvas.width || this.data.x <= 0) this.direction.x *= -1; 
-        if(this.data.y <= 0) this.direction.y *= -1;
+        if(this.data.x <= BALL_SETTINGS.radius || this.data.x >= this.game.canvas.width - BALL_SETTINGS.radius) 
+            this.direction.x *= -1;
+        
+        if(this.data.y <= BALL_SETTINGS.radius) this.direction.y *= -1;
     }
 
     detectGroundCollision() {
@@ -52,16 +55,24 @@ class Ball {
     detectBoardCollision() {
         const board = this.game.getEntity(Board);
         if(!(board instanceof Board)) return;
-        const collision = board.getBorderCords().find(cords => {
-            const xDistance = Math.abs(cords.x - this.data.x);
-            const yDistance = Math.abs(cords.y - this.data.y);
-            const distance = Math.sqrt(yDistance**2 + xDistance**2);
-            return distance < BALL_SETTINGS.radius; 
-        });
+        const collision = board.getBorderCords().find(cords => this.isColliding(cords));
         if(collision) {
             console.log('Ball and board collision!');
             console.log(collision)
-            this.direction.y *= -1;
+            if(collision.side === BorderCordsSide.LEFT || collision.side === BorderCordsSide.RIGHT) {
+                this.direction.x *= -1;
+                this.data.x = board.data.x - BALL_SETTINGS.radius;
+            } else if(collision.side === BorderCordsSide.LEFT_CORNER) {
+                this.direction.y *= -1;
+                this.data.y = board.data.y - BALL_SETTINGS.radius;
+            } else if(collision.side === BorderCordsSide.RIGHT_CORNER) {
+                this.direction.y *= -1;
+                this.data.y = board.data.y - BALL_SETTINGS.radius;
+            }
+            else {
+                this.direction.y *= -1;
+                this.data.y = board.data.y - BALL_SETTINGS.radius;
+            }
             // Rewrite logic below
             // Trying to make it so when we hit corner ball reflects at like a 160 degree angle
             // Idea is if you hit board in center reflect at 90 degrees (straight up)
@@ -86,6 +97,13 @@ class Ball {
             //     const angle = Math.sin(90);
             // }
         }
+    }
+
+    private isColliding(cords: Vector): boolean {
+        const xDistance = Math.abs(cords.x - this.data.x);
+        const yDistance = Math.abs(cords.y - this.data.y);
+        const distance = Math.sqrt(yDistance**2 + xDistance**2);
+        return distance < BALL_SETTINGS.radius; 
     }
 
     moveBall() {

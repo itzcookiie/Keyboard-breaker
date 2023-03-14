@@ -1,3 +1,4 @@
 - Make canvas border more glossy
 - Create a Cord/Vector interface and use that when passing x, y data around
 - Create an index.js file in entities, export all entities there, then import the file using * syntax and loop over each entitiy instead of adding manually
+- Change logic between collision between ball/board, so the ball bounces at lower angles the further it is hit from the center of the board (e.g. at the board corners, it bounces at a very steep angle or towards the ground)
