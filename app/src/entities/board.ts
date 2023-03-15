@@ -4,19 +4,22 @@ import { BorderCords, BorderCordsData, BorderCordsSide } from '../types';
 import BoardConfig from '../configs/boardConfig';
 import { Vector } from '../types';
 import { getBorderCords } from '../lib';
+import { State } from '../state';
 
 
 class Board {
     data: Vector;
     game: Game;
+    reset: () => void;
 
     constructor(game: Game) {
         this.game = game;
-        this.data = BoardConfig.generatePosition(game);
+        this.data = this.getData();
         this.attachEventListener();
+        this.reset = this.resetData;
     }
 
-    draw() {
+    drawBoard() {
         if(!this.game.context) return;
         const ctx = this.game.context;
         ctx.save();
@@ -25,8 +28,21 @@ class Board {
         ctx.restore();
     }
 
+    draw() {
+        this.drawBoard();
+        if(this.game.state === State.BALL_HOLD) {
+            this.reset();
+        } else if(this.game.state === State.GAMEPLAY) {
+            
+        } else if(this.game.state === State.OUT_OF_PLAY) {
+
+        } else {
+
+        }
+    }
+
     moveBoard(e: MouseEvent) {
-        if(!this.game.canvas) return;
+        if(!this.game.canvas || this.game.state !== State.GAMEPLAY) return;
         const x = e.offsetX;
         const canvasLength = this.game.canvas.offsetWidth;
 
@@ -80,8 +96,12 @@ class Board {
         })
     }
 
-    reset() {
-        this.data = BoardConfig.generatePosition(this.game);
+    getData() {
+        return BoardConfig.generatePosition(this.game);
+    }
+
+    resetData() {
+        this.data = this.getData();
     }
 
     attachEventListener() {

@@ -1,28 +1,32 @@
-import BallConfig from "../configs/ballConfig";
-import { BALL_SETTINGS, BOARD_SETTINGS } from "../constants";
-import { BorderCordsSide } from '../types';
 import Game from "../game";
-import { Vector } from "../types";
 import Board from "./board";
 import Bricks, { Brick } from "./bricks";
+
+import BallConfig from "../configs/ballConfig";
+import { State } from "../state";
+
+import { BALL_SETTINGS } from "../constants";
+import { BorderCordsSide, Vector } from '../types';
 
 
 class Ball {
     data: Vector;
     game: Game;
     direction: Vector;
+    reset: () => void;
 
     constructor(game: Game) {
         this.game = game;
-        this.data = BallConfig.getPositions(game);
+        this.data = this.getData();
         this.direction = {
             x: 1, // +ve direction
             y: 1 // +ve direction
         }
-        // this.attachEventListener();
+        this.attachEventListener();
+        this.reset = this.resetData;
     }
 
-    draw() {
+    drawBall() {
         if(!this.game.context) return;
         const ctx = this.game.context;
         ctx.save();
@@ -31,7 +35,17 @@ class Ball {
         ctx.arc(this.data.x, this.data.y, BALL_SETTINGS.radius, 0, 2 * Math.PI);
         ctx.fill();
         ctx.restore();
-        this.moveBall();
+    }
+
+    draw() {
+        this.drawBall();
+        if(this.game.state === State.BALL_HOLD) {
+            this.reset();
+        } else if(this.game.state === State.GAMEPLAY) {
+            this.moveBall();
+        } else {
+
+        }
     }
 
     detectCollision() {
@@ -52,6 +66,7 @@ class Ball {
         if(this.data.y >= this.game.canvas.height) {
             console.log('Ball went out of play!');
             this.direction.y *= -1;
+            this.game.state = State.OUT_OF_PLAY;
         }
     }
 
@@ -127,11 +142,12 @@ class Ball {
         }
     }
 
-    private isColliding(cords: Vector): boolean {
-        const xDistance = Math.abs(cords.x - this.data.x);
-        const yDistance = Math.abs(cords.y - this.data.y);
-        const distance = Math.sqrt(yDistance**2 + xDistance**2);
-        return distance < BALL_SETTINGS.radius; 
+    getData() {
+        return BallConfig.getPositions(this.game);
+    }
+
+    resetData() {
+        this.data = this.getData();
     }
 
     moveBall() {
@@ -140,12 +156,33 @@ class Ball {
         this.detectCollision();
     }
 
+    releaseBall(e: MouseEvent) {
+        if(this.game.state !== State.BALL_HOLD) return;
+        const x = e.offsetX;
+        if(x > (this.game.canvas.offsetWidth / 2)) {
+            this.direction.x = Math.abs(this.direction.x);
+            this.direction.y = Math.abs(this.direction.y);
+        } else {
+            this.direction.x = -Math.abs(this.direction.x);
+            this.direction.y = -Math.abs(this.direction.y);
+        }
+        this.game.state = State.GAMEPLAY;
+    }
+
     attachEventListener() {
-        this.game.canvas.addEventListener('mousemove', (e) => {
-            this.detectCollision();
-            this.data.x = (e.offsetX / this.game.canvas.offsetWidth) * (this.game.canvas.width - BALL_SETTINGS.radius);
-            this.data.y = (e.offsetY / this.game.canvas.offsetHeight) * (this.game.canvas.height - BALL_SETTINGS.radius);
-        })
+        // this.game.canvas.addEventListener('mousemove', (e) => {
+        //     this.detectCollision();
+        //     this.data.x = (e.offsetX / this.game.canvas.offsetWidth) * (this.game.canvas.width - BALL_SETTINGS.radius);
+        //     this.data.y = (e.offsetY / this.game.canvas.offsetHeight) * (this.game.canvas.height - BALL_SETTINGS.radius);
+        // })
+        this.game.canvas.addEventListener('click', this.releaseBall.bind(this));
+    }
+
+    private isColliding(cords: Vector): boolean {
+        const xDistance = Math.abs(cords.x - this.data.x);
+        const yDistance = Math.abs(cords.y - this.data.y);
+        const distance = Math.sqrt(yDistance**2 + xDistance**2);
+        return distance < BALL_SETTINGS.radius; 
     }
 }
 

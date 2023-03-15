@@ -94,7 +94,7 @@ class Bricks {
         return results.length ? results[0] : null;
     }
 
-    updateBricks(game: Game) {
+    updateData(game: Game) {
         this.data = this.generateBricks(game);
     }
 
