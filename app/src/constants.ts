@@ -33,6 +33,5 @@ export const BALL_SETTINGS = {
 };
 
 export const GAME_SETTINGS = {
-    lives: 2,
-    maxLevel: 3
+    lives: 2
 };

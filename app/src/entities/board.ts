@@ -107,7 +107,7 @@ class Board {
     }
 
     attachEventListener() {
-        this.game.canvas.addEventListener('mousemove', (e: MouseEvent) => this.moveBoard(e));
+        this.game.canvas.addEventListener('mousemove', this.moveBoard.bind(this));
         // this.game.canvas.addEventListener('click', (e) => console.log(this.data));
     }
 }

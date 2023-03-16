@@ -6,12 +6,11 @@ import BallConfig from "../configs/ballConfig";
 import { State } from "../state";
 
 import { BALL_SETTINGS } from "../constants";
-import { BorderCordsSide, Vector } from '../types';
+import { BorderCordsSide, Vector, BallLevel } from '../types';
 
 
 class Ball {
-    data: Vector;
-    startPos: Vector;
+    data: BallLevel;
     game: Game;
     direction: Vector;
     reset: () => void;
@@ -19,7 +18,6 @@ class Ball {
     constructor(game: Game) {
         this.game = game;
         this.data = this.getData();
-        this.startPos = this.data;
         this.direction = {
             x: 1, // +ve direction
             y: 1 // +ve direction
@@ -70,7 +68,7 @@ class Ball {
         if(this.data.y >= this.game.canvas.height) {
             console.log('Ball went out of play!');
             this.direction.y *= -1;
-            this.game.stateChangeAfterBallHitsGround();
+            this.game.onBallHitsGround();
         }
     }
 
@@ -146,7 +144,7 @@ class Ball {
         }
     }
 
-    getData(): Vector {
+    getData(): BallLevel {
         return BallConfig.getPositions(this.game);
     }
 
@@ -155,8 +153,8 @@ class Ball {
     }
 
     moveBall() {
-        this.data.x += (BALL_SETTINGS.xVelocity * this.direction.x);
-        this.data.y += (BALL_SETTINGS.yVelocity * this.direction.y);
+        this.data.x += (this.data.xVelocity * this.direction.x);
+        this.data.y += (this.data.yVelocity * this.direction.y);
         this.detectCollision();
     }
 

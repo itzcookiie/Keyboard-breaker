@@ -1,26 +1,23 @@
 import Game from '../game';
 import BoardConfig from './boardConfig';
 import { BALL_SETTINGS, BOARD_SETTINGS } from '../constants';
-import { Vector, GameLevel } from '../types';
+import { GameLevel, BallLevel } from '../types';
 import Board from '../entities/board';
 
 
-interface BallLevel {
-    startPos: [number, number];
-}
-
 type BallLevels = {
     [key in GameLevel]: BallLevel;
-}
+};
 
 
 class BallConfig {
-    static getPositions(game: Game): Vector {
-        const { startPos } = this.getConfig(game);
-        const [x, y] = startPos;
+    static getPositions(game: Game): BallLevel {
+        const { x, y, xVelocity, yVelocity } = this.getConfig(game);
         return {
             x,
-            y
+            y,
+            xVelocity,
+            yVelocity
         }
     }
 
@@ -38,35 +35,49 @@ class BallConfig {
         }
     }
 
-    private static calculateStartPos(game: Game): BallLevel {
+    private static calculateStartPos(game: Game): Pick<BallLevel, 'x' | 'y'> {
         const board = game.getEntity(Board);
         if(board instanceof Board) {
             const x = board.data.x + (BOARD_SETTINGS.width / 2);
             const y = board.data.y - BALL_SETTINGS.radius;
             return {
-                startPos: [x, y]
+                x,
+                y
             };
         } else {
             const {x: boardX, y: boardY} = BoardConfig.generatePosition(game);
             const x = boardX + (BOARD_SETTINGS.width / 2);
             const y = boardY - BALL_SETTINGS.radius;
             return {
-                startPos: [x, y]
+                x,
+                y
             };
         };
 
     }
 
     private static levelOne(game: Game): BallLevel {
-        return this.calculateStartPos(game);
+        return {
+            ...this.calculateStartPos(game),
+            xVelocity: 2.5,
+            yVelocity: 2.5
+        };
     }
 
     private static levelTwo(game: Game): BallLevel {
-        return this.calculateStartPos(game);
+        return {
+            ...this.calculateStartPos(game),
+            xVelocity: 2.5,
+            yVelocity: 2.5
+        };
     }
 
     private static levelThree(game: Game): BallLevel {
-        return this.calculateStartPos(game);
+        return {
+            ...this.calculateStartPos(game),
+            xVelocity: 5.5,
+            yVelocity: 5.5
+        };
     }
 }
 

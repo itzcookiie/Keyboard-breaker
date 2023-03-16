@@ -4,8 +4,9 @@ import Game from './game';
 import Bricks from './entities/bricks';
 import Board from './entities/board';
 import Ball from './entities/ball';
+import UIElements from './entities/uiElements';
+
 import { loadImages } from './lib';
-import UIElements from './uiElements';
 
 
 // const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -29,7 +30,6 @@ const IMAGES = [
 
 window.document.addEventListener('DOMContentLoaded', async() => {
     const images = await loadImages(IMAGES);
-    console.log(images)
     const game = new Game(images);
     game.registerEntities(Bricks, Board, Ball, UIElements);
     game.runGameLoop();

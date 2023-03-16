@@ -1,8 +1,8 @@
+import Game from "./game";
 import Ball from "./entities/ball";
 import Board from "./entities/board";
 import Bricks from "./entities/bricks";
-import UIElements from "./uiElements";
-import Game from "./game";
+import UIElements from "./entities/uiElements";
 
 
 export type Entity = Bricks | Board | Ball | UIElements;
@@ -19,6 +19,11 @@ export interface Vector {
     y: number;
 };
 
+export interface BallLevel extends Vector {
+    xVelocity: number;
+    yVelocity: number;
+};
+
 export enum BorderCordsSide {
     LEFT = 'LEFT',
     TOP = 'TOP',
@@ -31,6 +36,7 @@ export enum BorderCordsSide {
 export interface BorderCords extends Vector {
     side: BorderCordsSide;
 };
+
 
 export interface BorderCordsData<EntityData> {
     entity: EntityData;

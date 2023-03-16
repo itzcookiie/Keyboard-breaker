@@ -8,6 +8,7 @@ class Game {
     private entities: Entity[];
     canvas = document.getElementById('canvas') as HTMLCanvasElement;
     context = this.canvas.getContext("2d");
+    isGameOver = false;
     state: State;
     level: GameLevel;
     lives: number;
@@ -19,7 +20,7 @@ class Game {
         this.timestamp = 0;
         this.entities = [];
         this.level = GameLevel.ONE;
-        this.state = State.BALL_HOLD;
+        this.state = State.NEXT_LEVEL;
         this.images = images;
         // Added to future work
         // this.attachEventListener();
@@ -42,7 +43,7 @@ class Game {
         if(this.state === State.GAMEPLAY) {
             // this.entities.forEach(entityObj => entityObj.draw());
         } else if(this.state === State.OUT_OF_PLAY) {
-            this.state = State.BALL_HOLD;
+            this.lives === 0 ? this.state = State.GAME_OVER : this.state = State.BALL_HOLD;
         } else if(this.state === State.BALL_HOLD) {
             // this.state = State.GAMEPLAY;
         } else if(this.state === State.NEXT_LEVEL) {
@@ -60,7 +61,11 @@ class Game {
             } else if(this.level === GameLevel.THREE) {
                 ctx.restore();
             }
-            this.state = State.GAMEPLAY;
+            this.state = State.BALL_HOLD;
+        } else if(this.state === State.GAME_OVER) {
+            console.log('Game over!');
+            this.isGameOver = true;
+            // Add game over logic here e.g. display game over instructions
         }
     }
 
@@ -78,14 +83,10 @@ class Game {
         args.forEach(entity => this.registerEntity(entity));
     }
 
-    isGameOver(): boolean {
+    gameLevelFinished(): boolean {
         const bricks = this.getEntity(Bricks);
         if(!(bricks instanceof Bricks)) return false;
         return bricks.data.length === 0;
-    }
-
-    stateChangeAfterBallHitsGround() {
-        this.state = State.OUT_OF_PLAY;
     }
 
 
@@ -93,15 +94,21 @@ class Game {
         this.state = State.GAMEPLAY;
     }
 
+    onBallHitsGround() {
+        this.lives--;
+        this.state = State.OUT_OF_PLAY;
+    }
+
     runGameLoop(timestamp: number = 0) {
         // if(timestamp - this.timestamp >= STEP) {
         //     this.timestamp = timestamp;
         // }
-        requestAnimationFrame(this.runGameLoop.bind(this));
-        if(this.isGameOver()) {
+        this.draw();
+        if(this.isGameOver) return;
+        if(this.gameLevelFinished()) {
             this.state = State.NEXT_LEVEL;
         }
-        this.draw();
+        requestAnimationFrame(this.runGameLoop.bind(this));
     }
 
     attachEventListener() {
