@@ -2,6 +2,7 @@ import Game from '../game';
 import BoardConfig from './boardConfig';
 import { BALL_SETTINGS, BOARD_SETTINGS } from '../constants';
 import { Vector, GameLevel } from '../types';
+import Board from '../entities/board';
 
 
 interface BallLevel {
@@ -38,13 +39,22 @@ class BallConfig {
     }
 
     private static calculateStartPos(game: Game): BallLevel {
-        const {x: boardX, y: boardY} = BoardConfig.generatePosition(game);
-        const boardMidX = boardX + (BOARD_SETTINGS.width / 2);
-        const x = boardMidX;
-        const y = boardY - BALL_SETTINGS.radius;
-        return {
-            startPos: [x, y]
-        }
+        const board = game.getEntity(Board);
+        if(board instanceof Board) {
+            const x = board.data.x + (BOARD_SETTINGS.width / 2);
+            const y = board.data.y - BALL_SETTINGS.radius;
+            return {
+                startPos: [x, y]
+            };
+        } else {
+            const {x: boardX, y: boardY} = BoardConfig.generatePosition(game);
+            const x = boardX + (BOARD_SETTINGS.width / 2);
+            const y = boardY - BALL_SETTINGS.radius;
+            return {
+                startPos: [x, y]
+            };
+        };
+
     }
 
     private static levelOne(game: Game): BallLevel {

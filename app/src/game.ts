@@ -1,11 +1,7 @@
-import Bricks, { Brick } from './entities/bricks';
-import Board from './entities/board';
-import Ball from './entities/ball';
-import { Entity, EntityClass, GameLevel } from './types';
+import Bricks from './entities/bricks';
+import { Entity, EntityClass, GameLevel, LoadedImage } from './types';
 import { State } from './state';
-
-
-const STEP = 10;
+import { GAME_SETTINGS } from './constants';
 
 
 class Game {
@@ -14,13 +10,17 @@ class Game {
     context = this.canvas.getContext("2d");
     state: State;
     level: GameLevel;
+    lives: number;
+    images: LoadedImage[];
     timestamp: number;
 
-    constructor() {
+    constructor(images: LoadedImage[]) {
+        this.lives = GAME_SETTINGS.lives;
         this.timestamp = 0;
         this.entities = [];
         this.level = GameLevel.ONE;
-        this.state = State.GAMEPLAY;
+        this.state = State.BALL_HOLD;
+        this.images = images;
         // Added to future work
         // this.attachEventListener();
     }
@@ -42,21 +42,25 @@ class Game {
         if(this.state === State.GAMEPLAY) {
             // this.entities.forEach(entityObj => entityObj.draw());
         } else if(this.state === State.OUT_OF_PLAY) {
-            // const collisionEntities = this.getEntities(Ball, Board);
-            // if(collisionEntities && collisionEntities.length > 1) {
-            //     collisionEntities.forEach(entity => {
-            //         if(entity instanceof Ball) {
-            //             entity.reset();
-            //         };
-            //         if(entity instanceof Board) {
-            //             entity.reset();
-            //         };
-            //     })
-
-            // }
             this.state = State.BALL_HOLD;
         } else if(this.state === State.BALL_HOLD) {
             // this.state = State.GAMEPLAY;
+        } else if(this.state === State.NEXT_LEVEL) {
+            const newLevel = this.level + 1;
+            if(newLevel > GameLevel.THREE) {
+                this.state = State.GAME_OVER;
+                return;
+            }
+            const levelString = GameLevel[newLevel];
+            this.level = GameLevel[levelString as keyof typeof GameLevel];
+            if(this.level === GameLevel.TWO) {
+                ctx.save();
+                ctx.translate(this.canvas.width, this.canvas.height);
+                ctx.rotate(Math.PI);
+            } else if(this.level === GameLevel.THREE) {
+                ctx.restore();
+            }
+            this.state = State.GAMEPLAY;
         }
     }
 
@@ -80,14 +84,22 @@ class Game {
         return bricks.data.length === 0;
     }
 
+    stateChangeAfterBallHitsGround() {
+        this.state = State.OUT_OF_PLAY;
+    }
+
+
+    stateChangeAfterReleaseBall() {
+        this.state = State.GAMEPLAY;
+    }
+
     runGameLoop(timestamp: number = 0) {
         // if(timestamp - this.timestamp >= STEP) {
         //     this.timestamp = timestamp;
         // }
         requestAnimationFrame(this.runGameLoop.bind(this));
         if(this.isGameOver()) {
-            this.state = State.BALL_HOLD
-            console.log('Game over!');
+            this.state = State.NEXT_LEVEL;
         }
         this.draw();
     }

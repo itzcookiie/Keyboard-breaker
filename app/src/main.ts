@@ -4,9 +4,11 @@ import Game from './game';
 import Bricks from './entities/bricks';
 import Board from './entities/board';
 import Ball from './entities/ball';
+import { loadImages } from './lib';
+import UIElements from './uiElements';
 
 
-const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+// const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 // const ctx = canvas.getContext("2d");
 // ctx.font = "40px Arial";
 // const result = ctx?.measureText("Hello world");
@@ -20,8 +22,15 @@ const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 //     console.log(`Result finish`)
 // }))
 
-window.document.addEventListener('DOMContentLoaded', () => {
-    const game = new Game();
-    game.registerEntities(Bricks, Board, Ball);
+
+const IMAGES = [
+    {'name': 'heart', path: '/heart.png'}
+];
+
+window.document.addEventListener('DOMContentLoaded', async() => {
+    const images = await loadImages(IMAGES);
+    console.log(images)
+    const game = new Game(images);
+    game.registerEntities(Bricks, Board, Ball, UIElements);
     game.runGameLoop();
 })

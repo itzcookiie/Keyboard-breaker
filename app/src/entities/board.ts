@@ -31,11 +31,13 @@ class Board {
     draw() {
         this.drawBoard();
         if(this.game.state === State.BALL_HOLD) {
-            this.reset();
+            // this.reset();
         } else if(this.game.state === State.GAMEPLAY) {
             
         } else if(this.game.state === State.OUT_OF_PLAY) {
-
+            
+        } else if(this.game.state === State.NEXT_LEVEL) {
+            this.resetData();
         } else {
 
         }

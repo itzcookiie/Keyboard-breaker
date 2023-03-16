@@ -1,10 +1,11 @@
 import Ball from "./entities/ball";
 import Board from "./entities/board";
 import Bricks from "./entities/bricks";
+import UIElements from "./uiElements";
 import Game from "./game";
 
 
-export type Entity = Bricks | Board | Ball;
+export type Entity = Bricks | Board | Ball | UIElements;
 export type EntityClass<T> = new (game: Game) => T;
 
 export enum GameLevel {
@@ -25,19 +26,25 @@ export enum BorderCordsSide {
     BOTTOM = 'BOTTOM',
     LEFT_CORNER = 'LEFT_CORNER',
     RIGHT_CORNER = 'RIGHT_CORNER',
-}
+};
 
 export interface BorderCords extends Vector {
     side: BorderCordsSide;
-}
+};
 
 export interface BorderCordsData<EntityData> {
     entity: EntityData;
     cords: BorderCords[];
-}
+};
 
 export interface BrickData {
     x: number;
     y: number;
     key: string;
-}
+};
+
+export interface LoadedImage {
+    name: string;
+    path: string;
+    element: HTMLImageElement;
+};

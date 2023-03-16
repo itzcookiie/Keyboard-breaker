@@ -11,6 +11,7 @@ import { BorderCordsSide, Vector } from '../types';
 
 class Ball {
     data: Vector;
+    startPos: Vector;
     game: Game;
     direction: Vector;
     reset: () => void;
@@ -18,6 +19,7 @@ class Ball {
     constructor(game: Game) {
         this.game = game;
         this.data = this.getData();
+        this.startPos = this.data;
         this.direction = {
             x: 1, // +ve direction
             y: 1 // +ve direction
@@ -43,6 +45,8 @@ class Ball {
             this.reset();
         } else if(this.game.state === State.GAMEPLAY) {
             this.moveBall();
+        } else if(this.game.state === State.NEXT_LEVEL) {
+            this.resetData();
         } else {
 
         }
@@ -66,7 +70,7 @@ class Ball {
         if(this.data.y >= this.game.canvas.height) {
             console.log('Ball went out of play!');
             this.direction.y *= -1;
-            this.game.state = State.OUT_OF_PLAY;
+            this.game.stateChangeAfterBallHitsGround();
         }
     }
 
@@ -142,7 +146,7 @@ class Ball {
         }
     }
 
-    getData() {
+    getData(): Vector {
         return BallConfig.getPositions(this.game);
     }
 
@@ -166,7 +170,7 @@ class Ball {
             this.direction.x = -Math.abs(this.direction.x);
             this.direction.y = -Math.abs(this.direction.y);
         }
-        this.game.state = State.GAMEPLAY;
+        this.game.stateChangeAfterReleaseBall();
     }
 
     attachEventListener() {

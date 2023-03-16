@@ -1,8 +1,11 @@
 import Game from '../game';
-import { BRICK_SETTINGS, KEY_SETTINGS } from '../constants';
+
 import { BricksConfig } from '../configs/bricksConfig';
+
+import { BRICK_SETTINGS, KEY_SETTINGS } from '../constants';
 import { BorderCordsData, BrickData } from '../types';
 import { getAllBorderCords } from '../lib';
+import { State } from '../state';
 
 
 export class Brick {
@@ -50,6 +53,17 @@ class Bricks {
     draw() {
         this.drawBricks();
         this.drawKeys();
+        if(this.game.state === State.BALL_HOLD) {
+            
+        } else if(this.game.state === State.GAMEPLAY) {
+            
+        } else if(this.game.state === State.OUT_OF_PLAY) {
+            
+        } else if(this.game.state === State.NEXT_LEVEL) {
+            this.resetData();
+        } else {
+
+        }
     }
 
     drawBricks() {
@@ -94,8 +108,9 @@ class Bricks {
         return results.length ? results[0] : null;
     }
 
-    updateData(game: Game) {
-        this.data = this.generateBricks(game);
+    resetData() {
+        this.data = this.generateBricks(this.game);
+        this.keys = BricksConfig.generateKeyPositions(this.game);
     }
 
     private generateBricks(game: Game): Brick[] {

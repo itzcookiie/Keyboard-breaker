@@ -30,4 +30,9 @@ export const BALL_SETTINGS = {
     color: COLORS.WHITE,
     xVelocity: 2.5,
     yVelocity: 2.5
-}
+};
+
+export const GAME_SETTINGS = {
+    lives: 2,
+    maxLevel: 3
+};

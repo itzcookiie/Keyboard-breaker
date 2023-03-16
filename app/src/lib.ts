@@ -1,20 +1,20 @@
-import { BorderCords, BorderCordsData, BorderCordsSide } from './types';
+import { BorderCords, BorderCordsData, BorderCordsSide, LoadedImage } from './types';
 
 
-interface BorderCordsData {
+interface BorderCordsPropsData {
     x: number;
     y: number;
     width: number;
     height: number;
 }
 
-interface BorderCordsProps<BorderCordsEntity> {
-    entity: BorderCordsEntity;
-    data: BorderCordsData;
+interface BorderCordsProps<BorderCordsPropsEntity> {
+    entity: BorderCordsPropsEntity;
+    data: BorderCordsPropsData;
 }
 
 
-export function getTopBorderCords({ x, y, width }: BorderCordsData): BorderCords[] {
+export function getTopBorderCords({ x, y, width }: BorderCordsPropsData): BorderCords[] {
     return Array.from({ length: width }, (_, i) => ({
         x: x + i,
         y: y,
@@ -26,7 +26,7 @@ export function getTopBorderCords({ x, y, width }: BorderCordsData): BorderCords
     }));
 }
 
-export function getBottomBorderCords({ x, y, width, height }: BorderCordsData): BorderCords[] {
+export function getBottomBorderCords({ x, y, width, height }: BorderCordsPropsData): BorderCords[] {
     // Don't add original first and last position as those are picked up by the left and right functions 
     return Array.from({ length: width - 2 }, (_, i) => ({
         x: x + i + 1,
@@ -39,7 +39,7 @@ export function getBottomBorderCords({ x, y, width, height }: BorderCordsData): 
     }));
 }
 
-export function getRightBorderCords({ x, y, width, height }: BorderCordsData): BorderCords[] {
+export function getRightBorderCords({ x, y, width, height }: BorderCordsPropsData): BorderCords[] {
     // Skip the right first cord since it's already generated in the top
     return Array.from({ length: height - 1 }, (_, i) => ({
         x: x + width,
@@ -48,7 +48,7 @@ export function getRightBorderCords({ x, y, width, height }: BorderCordsData): B
     }));
 }
 
-export function getLeftBorderCords({ x, y, height }: BorderCordsData): BorderCords[] {
+export function getLeftBorderCords({ x, y, height }: BorderCordsPropsData): BorderCords[] {
     // Skip the right first cord since it's already generated in the top
     return Array.from({ length: height - 1 }, (_, i) => ({
         x: x,
@@ -57,7 +57,7 @@ export function getLeftBorderCords({ x, y, height }: BorderCordsData): BorderCor
     }));
 }
 
-export function getBorderCords<BorderCordsEntity>({ entity, data }: BorderCordsProps<BorderCordsEntity>): BorderCordsData<BorderCordsEntity> {
+export function getBorderCords<BorderCordsPropsEntity>({ entity, data }: BorderCordsProps<BorderCordsPropsEntity>): BorderCordsData<BorderCordsPropsEntity> {
     return {
         entity,
         cords: [
@@ -68,7 +68,7 @@ export function getBorderCords<BorderCordsEntity>({ entity, data }: BorderCordsP
     }
 }
 
-export function getAllBorderCords<BorderCordsEntity>({ entity, data }: BorderCordsProps<BorderCordsEntity>): BorderCordsData<BorderCordsEntity> {
+export function getAllBorderCords<BorderCordsPropsEntity>({ entity, data }: BorderCordsProps<BorderCordsPropsEntity>): BorderCordsData<BorderCordsPropsEntity> {
     return {
         entity,
         cords: [
@@ -79,3 +79,15 @@ export function getAllBorderCords<BorderCordsEntity>({ entity, data }: BorderCor
         ]
     }
 }
+
+export const loadImages = (images: Pick<LoadedImage, 'name' | 'path'>[]): Promise<LoadedImage[]> => {
+    return Promise.all(images.map(imageData => {
+        return new Promise<LoadedImage>((resolve, reject) => {
+            const image = new Image();
+            image.addEventListener('load', function(e) {
+                resolve({ ...imageData, element: this })
+            });
+            image.src = imageData.path;
+        });
+    }))
+ };
