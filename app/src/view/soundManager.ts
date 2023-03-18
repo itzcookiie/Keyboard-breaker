@@ -31,11 +31,12 @@ class SoundManager {
     muted: boolean;
 
     constructor() {
-        this.muted = false;
+        this.muted = true;
         this.sounds = this.processSounds(SOUNDS);
     }
 
     playSound(soundAlias: SoundAlias) {
+        if(this.muted) return;
         this.stopSounds();
         this.resumeBackgroundSound();
         this.sounds.find(sound => sound.id === soundAlias)?.audio.play();

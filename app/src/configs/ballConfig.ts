@@ -39,7 +39,8 @@ class BallConfig {
         const board = game.getEntity(Board);
         if(board instanceof Board) {
             const x = board.data.x + (BOARD_SETTINGS.width / 2);
-            const y = board.data.y - BALL_SETTINGS.radius;
+            // Make sure board doesn't touch board, so it doesn't think it's colliding with the board on game start
+            const y = board.data.y - (2 * BALL_SETTINGS.radius);
             return {
                 x,
                 y
@@ -47,7 +48,8 @@ class BallConfig {
         } else {
             const {x: boardX, y: boardY} = BoardConfig.generatePosition(game);
             const x = boardX + (BOARD_SETTINGS.width / 2);
-            const y = boardY - BALL_SETTINGS.radius;
+            // Make sure board doesn't touch board, so it doesn't think it's colliding with the board on game start
+            const y = boardY - (2 * BALL_SETTINGS.radius);
             return {
                 x,
                 y
@@ -59,24 +61,24 @@ class BallConfig {
     private static levelOne(game: Game): BallLevel {
         return {
             ...this.calculateStartPos(game),
-            xVelocity: 2.5,
-            yVelocity: 2.5
+            xVelocity: BALL_SETTINGS.level1.xVelocity,
+            yVelocity: BALL_SETTINGS.level1.yVelocity
         };
     }
 
     private static levelTwo(game: Game): BallLevel {
         return {
             ...this.calculateStartPos(game),
-            xVelocity: 2.5,
-            yVelocity: 2.5
+            xVelocity: BALL_SETTINGS.level2.xVelocity,
+            yVelocity: BALL_SETTINGS.level2.yVelocity
         };
     }
 
     private static levelThree(game: Game): BallLevel {
         return {
             ...this.calculateStartPos(game),
-            xVelocity: 5.5,
-            yVelocity: 5.5
+            xVelocity: BALL_SETTINGS.level3.xVelocity,
+            yVelocity: BALL_SETTINGS.level3.yVelocity
         };
     }
 }

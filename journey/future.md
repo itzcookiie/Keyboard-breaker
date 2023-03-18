@@ -1,7 +1,9 @@
 - Make canvas border more glossy
 - Create a Cord/Vector interface and use that when passing x, y data around
 - Create an index.js file in entities, export all entities there, then import the file using * syntax and loop over each entitiy instead of adding manually
-- Change logic between collision between ball/board, so the ball bounces at lower angles the further it is hit from the center of the board (e.g. at the board corners, it bounces at a very steep angle or towards the ground)
+- Change logic between collision between ball/board, so the ball bounces at lower angles the further it is hit from the center of the board (e.g. at the board corners, it bounces at a very steep angle or towards the ground) ✅
+    - Only needed to change the x component. The y component will stay the same since we already want the ball to travel up
+    - Realised to get the ball moving at 45 degrees, x = 1 and y = 1. 
 - When resizing window, update game canvas height/width so mouse pointer will always be in center of board when moving it
 - Refactor collision logic. Use filter instead of find. You know it's hit a corner when you filter for collision cords and in the results, the side field = e.g. RIGHT and TOP
 - Use event driven architecture - so when state change happens, create a new custom event and dispatch it. And let all the entities have event listeners that listen for these changes. Can create our own custom events e.g. onStateChangeGameplay, onStateChangeBallHold etc
@@ -10,3 +12,4 @@
 - Add score to center at the top. Reserve like 10% of height space for the score?
 - Move bricks closer together, so there is no overlap or only a 1/2px overlap
 - Move all music to google cloud storage and download to project
+- Add arrows to ball, so user can decide where to release it

@@ -5,7 +5,7 @@ import Bricks, { Brick } from "./bricks";
 import BallConfig from "../configs/ballConfig";
 import { State } from "../state";
 
-import { BALL_SETTINGS, GAME_SETTINGS } from "../constants";
+import { BALL_SETTINGS, BOARD_SETTINGS, GAME_SETTINGS } from "../constants";
 import { BorderCordsSide, Vector, BallLevel, SoundAlias } from '../types';
 
 
@@ -19,9 +19,9 @@ class Ball {
         this.game = game;
         this.data = this.getData();
         this.direction = {
-            x: 1, // +ve direction
-            y: 1 // +ve direction
-        }
+            x: 1, // towards right
+            y: -1 // towards up
+        };
         this.attachEventListener();
         this.reset = this.resetData;
     }
@@ -82,45 +82,32 @@ class Ball {
         const board = this.game.getEntity(Board);
         if(!(board instanceof Board)) return;
         const collision = board.getBorderCordsData().cords.find(cords => this.isColliding(cords));
-        if(collision) {
-            if(collision.side === BorderCordsSide.LEFT || collision.side === BorderCordsSide.RIGHT) {
-                this.direction.x *= -1;
-                // this.data.x = board.data.x - BALL_SETTINGS.radius;
-            } else if(collision.side === BorderCordsSide.LEFT_CORNER) {
-                this.direction.y *= -1;
-                this.data.y = board.data.y - BALL_SETTINGS.radius;
-            } else if(collision.side === BorderCordsSide.RIGHT_CORNER) {
-                this.direction.y *= -1;
-                this.data.y = board.data.y - BALL_SETTINGS.radius;
-            }
-            else {
-                this.direction.y *= -1;
-                this.data.y = board.data.y - BALL_SETTINGS.radius;
-            }
-            // Rewrite logic below
-            // Trying to make it so when we hit corner ball reflects at like a 160 degree angle
-            // Idea is if you hit board in center reflect at 90 degrees (straight up)
-            // If you hit it at the corners it reflects by like 160 degrees
-            // So the further from the center, the larger the angle/the more bent the ball reflects (key idea)
-            
-            // const boardMidPoint = board.data.x + (BOARD_SETTINGS.width / 2);
-            // const distanceFromCenter = collision.x - boardMidPoint;
-            // if(distanceFromCenter > 0) { // Collision happened on right side
-            //     const borderCorner = board.data.x + BOARD_SETTINGS.width; // Right corner
-            //     const halfBoardWidth = BOARD_SETTINGS.width / 2;
-            //     const minAngle = 90 // Sin 90 (in degrees. Convert from radians = 1)
-            //     const maxAngle = 160; // Sin 160 degrees
-            //     const angleDiff = maxAngle - minAngle;
-            //     const ratio = (distanceFromCenter / halfBoardWidth) * angleDiff;
-            //     const radiansToDegree = Math.PI / 180;
-            //     const angle = Math.sin(radiansToDegree * (minAngle + ratio));
-            //     this.direction.y *= (angle * -1);
-            // } else if(distanceFromCenter < 0) { // Left side
+        if(!collision) return;
+        // Rewrite logic below
+        // Trying to make it so when we hit corner ball reflects at like a 160 degree angle
+        // Idea is if you hit board in center reflect at 90 degrees (straight up)
+        // If you hit it at the corners it reflects by like 160 degrees
+        // So the further from the center, the larger the angle/the more bent the ball reflects (key idea)
 
-            // } else { // Center
-            //     const angle = Math.sin(90);
-            // }
+        const boardMidPoint = board.data.x + (BOARD_SETTINGS.width / 2);
+        const distanceFromCenter = collision.x - boardMidPoint;
+        const halfBoardWidth = BOARD_SETTINGS.width / 2;
+        const ratio = distanceFromCenter / halfBoardWidth;
+        this.direction.x = ratio;
+        // this.data.x = collision.x - BALL_SETTINGS.radius;
+
+        const yCornerComponent = 0.444; // 20 degrees. 45 degrees = 1. 20 degrees = (1 / 45) * 20
+        if(distanceFromCenter > 0) {
+            const yRatio = 1 - ((1 - yCornerComponent) * (ratio));
+            this.direction.y = -yRatio;
+        } else if(distanceFromCenter < 0) {
+            const yRatio = -1 + ((-1 + yCornerComponent) * (ratio));
+            this.direction.y = yRatio;
+        } else {
+            this.direction.y = 1;
         }
+        this.data.y = collision.y - BALL_SETTINGS.radius;
+
     }
 
     detectBrickCollision() {
@@ -169,11 +156,9 @@ class Ball {
         const x = e.offsetX;
         if(x > (this.game.canvas.offsetWidth / 2)) {
             this.direction.x = Math.abs(this.direction.x);
-            this.direction.y = Math.abs(this.direction.y);
         } else {
             this.direction.x = -Math.abs(this.direction.x);
-            this.direction.y = -Math.abs(this.direction.y);
-        }
+        };
         this.game.stateChangeAfterReleaseBall();
     }
 

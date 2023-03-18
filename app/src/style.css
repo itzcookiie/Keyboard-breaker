@@ -17,6 +17,12 @@ body {
   align-items: center;
 }
 
+.container {
+  width: 80vw;
+  position: relative;
+  aspect-ratio: 1366 / 768;
+}
+
 .canvas {
   width: 80vw;
   border: 5px solid #00FFFF;
@@ -28,7 +34,8 @@ body {
   display: none;
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  right: 50%;
+  transform: translate(50%, -50%);
   height: 300px;
   width: 300px;
   border-radius: 20px;
@@ -51,7 +58,7 @@ body {
 
 .game-over-pop-up__title {
   color: red;
-  font-size: 3rem;
+  font-size: clamp(2rem, 5vw, 3rem);
 }
 
 .game-over-pop-up__btn-wrapper {
