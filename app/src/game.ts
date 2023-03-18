@@ -1,29 +1,46 @@
 import Bricks from './entities/bricks';
+import SoundManager from './view/soundManager';
+
 import { Entity, EntityClass, GameLevel, LoadedImage } from './types';
 import { State } from './state';
 import { GAME_SETTINGS } from './constants';
+import { SoundAlias } from "./types";
+import CanvasUI from './view/canvasUi';
+import HtmlUI from './view/htmlUi';
 
 
 class Game {
+    private readonly canvasUI: CanvasUI
+    private readonly htmlUI: HtmlUI
     private entities: Entity[];
-    canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    context = this.canvas.getContext("2d");
+    readonly images: LoadedImage[];
+    readonly soundManager: SoundManager;
+    readonly canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    readonly context = this.canvas.getContext("2d");
     isGameOver = false;
     state: State;
     level: GameLevel;
     lives: number;
-    images: LoadedImage[];
+    score: number;
     timestamp: number;
 
     constructor(images: LoadedImage[]) {
+        this.soundManager = new SoundManager();
+        this.canvasUI = new CanvasUI(this);
+        this.htmlUI = new HtmlUI(this);
         this.lives = GAME_SETTINGS.lives;
         this.timestamp = 0;
+        this.score = 0;
         this.entities = [];
         this.level = GameLevel.ONE;
-        this.state = State.NEXT_LEVEL;
+        this.state = State.BALL_HOLD;
         this.images = images;
         // Added to future work
-        // this.attachEventListener();
+        this.attachEventListener();
+    }
+
+    init() {
+        this.soundManager.playSound(SoundAlias.BACKGROUND);
     }
 
     getEntity(entityClass: EntityClass<Entity>): Entity | undefined {
@@ -34,12 +51,16 @@ class Game {
         return this.entities.filter(entity => entityClasses.some(entityClass => entity instanceof entityClass));
     }
 
-    // TEST TO SEE IF THIS WORKS PROPERLY
     draw() {
         if (!this.context) return;
         const ctx = this.context;
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.entities.forEach(entityObj => entityObj.draw());
+
+        if(this.gameLevelFinished()) {
+            this.state = State.NEXT_LEVEL;
+        };
+
         if(this.state === State.GAMEPLAY) {
             // this.entities.forEach(entityObj => entityObj.draw());
         } else if(this.state === State.OUT_OF_PLAY) {
@@ -65,7 +86,7 @@ class Game {
         } else if(this.state === State.GAME_OVER) {
             console.log('Game over!');
             this.isGameOver = true;
-            // Add game over logic here e.g. display game over instructions
+            this.onGameOver();
         }
     }
 
@@ -89,7 +110,6 @@ class Game {
         return bricks.data.length === 0;
     }
 
-
     stateChangeAfterReleaseBall() {
         this.state = State.GAMEPLAY;
     }
@@ -99,20 +119,34 @@ class Game {
         this.state = State.OUT_OF_PLAY;
     }
 
-    runGameLoop(timestamp: number = 0) {
-        // if(timestamp - this.timestamp >= STEP) {
-        //     this.timestamp = timestamp;
-        // }
+    onGameOver() {
+        this.htmlUI.showGameOverPopUp();
+    }
+
+    reset() {
+        this.score = 0;
+        this.lives = GAME_SETTINGS.lives;
+        this.level = GameLevel.ONE;
+        this.state = State.BALL_HOLD;
+        this.entities.forEach(entityObj => entityObj.reset());
+        this.canvasUI.reset();
+        this.isGameOver = false;
+        this.startGame();
+    }
+
+    startGame() {
         this.draw();
         if(this.isGameOver) return;
-        if(this.gameLevelFinished()) {
-            this.state = State.NEXT_LEVEL;
-        }
-        requestAnimationFrame(this.runGameLoop.bind(this));
+        requestAnimationFrame(this.startGame.bind(this));
     }
 
     attachEventListener() {
-        window.addEventListener('resize', this.resizeCanvas.bind(this));
+        // window.addEventListener('resize', this.resizeCanvas.bind(this));
+        window.document.addEventListener('keydown', (e) => {
+            if(e.code === 'KeyM') {
+                this.soundManager.toggle();
+            }
+        });
     }
 }
 

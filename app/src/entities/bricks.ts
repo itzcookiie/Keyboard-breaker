@@ -25,11 +25,13 @@ class Bricks {
     game: Game;
     data: Brick[];
     keys: BrickData[]
+    reset: () => void;
 
     constructor(game: Game) {
         this.game = game;
         this.data = this.generateBricks(game);
         this.keys = BricksConfig.generateKeyPositions(this.game);
+        this.reset = this.resetData;
     }
 
     destroyBrick(brick: Brick): boolean {

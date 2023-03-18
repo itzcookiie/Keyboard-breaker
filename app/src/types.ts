@@ -2,10 +2,8 @@ import Game from "./game";
 import Ball from "./entities/ball";
 import Board from "./entities/board";
 import Bricks from "./entities/bricks";
-import UIElements from "./entities/uiElements";
 
-
-export type Entity = Bricks | Board | Ball | UIElements;
+export type Entity = Bricks | Board | Ball;
 export type EntityClass<T> = new (game: Game) => T;
 
 export enum GameLevel {
@@ -53,4 +51,27 @@ export interface LoadedImage {
     name: string;
     path: string;
     element: HTMLImageElement;
+};
+
+export enum UIElementType {
+    IMAGE = 'image',
+    TEXT = 'text'
+};
+
+export enum UIElement {
+    SCORE = 'score',
+    HEART_ICONS = 'heartIcons'
+};
+
+export interface UIElementData {
+    name: UIElement;
+    cords: Vector[];
+    type: UIElementType;
+};
+
+export enum SoundAlias {
+    BACKGROUND = 'BACKGROUND',
+    BRICK_HIT = 'BRICK_HIT',
+    GROUND_HIT = 'GROUND_HIT',
+    WALL_HIT = 'WALL_HIT'
 };

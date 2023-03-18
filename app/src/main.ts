@@ -4,7 +4,7 @@ import Game from './game';
 import Bricks from './entities/bricks';
 import Board from './entities/board';
 import Ball from './entities/ball';
-import UIElements from './entities/uiElements';
+import UI from './view/canvasUi';
 
 import { loadImages } from './lib';
 
@@ -31,6 +31,7 @@ const IMAGES = [
 window.document.addEventListener('DOMContentLoaded', async() => {
     const images = await loadImages(IMAGES);
     const game = new Game(images);
-    game.registerEntities(Bricks, Board, Ball, UIElements);
-    game.runGameLoop();
+    game.init();
+    game.registerEntities(Bricks, Board, Ball, UI);
+    game.startGame();
 })

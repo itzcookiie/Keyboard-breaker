@@ -5,8 +5,8 @@ import Bricks, { Brick } from "./bricks";
 import BallConfig from "../configs/ballConfig";
 import { State } from "../state";
 
-import { BALL_SETTINGS } from "../constants";
-import { BorderCordsSide, Vector, BallLevel } from '../types';
+import { BALL_SETTINGS, GAME_SETTINGS } from "../constants";
+import { BorderCordsSide, Vector, BallLevel, SoundAlias } from '../types';
 
 
 class Ball {
@@ -58,10 +58,15 @@ class Ball {
     }
 
     detectWallCollision() {
-        if(this.data.x <= BALL_SETTINGS.radius || this.data.x >= this.game.canvas.width - BALL_SETTINGS.radius) 
+        if(this.data.x <= BALL_SETTINGS.radius || this.data.x >= this.game.canvas.width - BALL_SETTINGS.radius) {
             this.direction.x *= -1;
-        
-        if(this.data.y <= BALL_SETTINGS.radius) this.direction.y *= -1;
+            this.game.soundManager.playSound(SoundAlias.WALL_HIT);
+        }
+
+        if(this.data.y <= BALL_SETTINGS.radius) {
+            this.direction.y *= -1;
+            this.game.soundManager.playSound(SoundAlias.WALL_HIT);
+        }
     }
 
     detectGroundCollision() {
@@ -69,6 +74,7 @@ class Ball {
             console.log('Ball went out of play!');
             this.direction.y *= -1;
             this.game.onBallHitsGround();
+            this.game.soundManager.playSound(SoundAlias.GROUND_HIT);
         }
     }
 
@@ -77,8 +83,6 @@ class Ball {
         if(!(board instanceof Board)) return;
         const collision = board.getBorderCordsData().cords.find(cords => this.isColliding(cords));
         if(collision) {
-            console.log('Ball and board collision!');
-            console.log(collision)
             if(collision.side === BorderCordsSide.LEFT || collision.side === BorderCordsSide.RIGHT) {
                 this.direction.x *= -1;
                 // this.data.x = board.data.x - BALL_SETTINGS.radius;
@@ -140,6 +144,8 @@ class Ball {
             else {
                 this.direction.y *= -1;
             }
+            this.game.score += GAME_SETTINGS.pointsPerBrick;
+            this.game.soundManager.playSound(SoundAlias.BRICK_HIT);
             bricks.destroyBrick(collidedBrick.entity);
         }
     }

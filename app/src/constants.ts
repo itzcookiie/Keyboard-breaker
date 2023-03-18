@@ -32,6 +32,13 @@ export const BALL_SETTINGS = {
     yVelocity: 2.5
 };
 
+export const SCORE_SETTINGS = {
+    xOffset: 50,
+    y: 50,
+    color: COLORS.LOGITECH_BLUE
+};
+
 export const GAME_SETTINGS = {
-    lives: 2
+    lives: 2,
+    pointsPerBrick: 100
 };

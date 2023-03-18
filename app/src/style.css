@@ -18,7 +18,59 @@ body {
 }
 
 .canvas {
-  background-color: #E6E6FA;
   width: 80vw;
   border: 5px solid #00FFFF;
+  background-color: #E6E6FA;
+  position: relative;
+}
+
+.game-over-pop-up {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 300px;
+  width: 300px;
+  border-radius: 20px;
+  background-color: royalblue;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-over-pop-up__wrapper {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-over-pop-up__title-wrapper {
+  flex: 1;
+}
+
+.game-over-pop-up__title {
+  color: red;
+  font-size: 3rem;
+}
+
+.game-over-pop-up__btn-wrapper {
+  width: 100%;
+}
+
+.game-over-pop-up__btn {
+  padding: 5px 0;
+  width: 100%;
+  border-radius: 50px;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  background-color: transparent;
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+.game-over-pop-up__btn:hover {
+  transform: scale(0.98);
 }
