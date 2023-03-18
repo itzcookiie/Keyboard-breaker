@@ -9,3 +9,4 @@
     - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set (can use this for automatically dispatching events when state has been set/changed)
 - Add score to center at the top. Reserve like 10% of height space for the score?
 - Move bricks closer together, so there is no overlap or only a 1/2px overlap
+- Move all music to google cloud storage and download to project
