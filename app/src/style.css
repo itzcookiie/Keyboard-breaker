@@ -18,14 +18,46 @@ body {
 }
 
 .container {
+  height: auto;
   width: 80vw;
   position: relative;
   aspect-ratio: 1366 / 768;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  height: calc(100% + 20px);
+  width: 100%;
+  top: -10px;
+  background: linear-gradient(#ff3d02, #4169e1);
+  animation: glossyBorder 5s linear infinite;
+  border-radius: 10px;
+}
+
+.container::before {
+
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  height: calc(100% + 20px);
+  width: 100%;
+  background-color: black;
+  /* filter: blur(50px); */
+  top: -10px;
+  z-index: -1;
+  inset: 4px;
 }
 
 .canvas {
   width: 80vw;
-  border: 5px solid #00FFFF;
+  /* border: 5px solid #00FFFF; */
   background-color: #E6E6FA;
   position: relative;
 }
@@ -80,4 +112,13 @@ body {
 
 .game-over-pop-up__btn:hover {
   transform: scale(0.98);
+}
+
+@keyframes glossyBorder {
+  0% {
+    rotate: 0deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
 }

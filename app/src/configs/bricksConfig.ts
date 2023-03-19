@@ -55,8 +55,8 @@ export class BricksConfig {
         // And adjust as needed based on brick padding and leftover height/width of keys
         // Basing calculatings currently on longest text height/width
         return this.generateKeyPositions(game).map(key => ({
-            x: key.x - (KEY_SETTINGS.width / 2) - (BRICK_SETTINGS.padding / 2),
-            y: key.y - KEY_SETTINGS.height - (BRICK_SETTINGS.padding / 2) + (BRICK_SETTINGS.height - KEY_SETTINGS.height),
+            x: key.x - (KEY_SETTINGS.width / 2) - (BRICK_SETTINGS.margin / 2),
+            y: key.y - KEY_SETTINGS.height - (BRICK_SETTINGS.margin / 2) + (BRICK_SETTINGS.height - KEY_SETTINGS.height),
             key: key.key
         }))
     }
@@ -66,8 +66,8 @@ export class BricksConfig {
         const [xStartPos, yStartPos] = startPos;
         return this.keys.flatMap((keyRow, rowIndex) => 
             keyRow.join('').split('').map((key, colIndex) => ({
-                x: xStartPos + (colIndex * (BRICK_SETTINGS.width + gap + BRICK_SETTINGS.padding)),
-                y: yStartPos + (rowIndex * (BRICK_SETTINGS.height + gap + BRICK_SETTINGS.padding)),
+                x: xStartPos + (colIndex * (BRICK_SETTINGS.width + gap + BRICK_SETTINGS.margin)),
+                y: yStartPos + (rowIndex * (BRICK_SETTINGS.height + gap + BRICK_SETTINGS.margin)),
                 key
             })
         ));
@@ -84,7 +84,7 @@ export class BricksConfig {
     }
 
     private static levelOne(canvas: HTMLCanvasElement): BrickLevel {
-        const gap = 10;
+        const gap = BRICK_SETTINGS.gap;
         const x = this.calculateCanvasCenter(gap, canvas.width);
         const y = canvas.height * 0.1;
         return {
@@ -94,7 +94,7 @@ export class BricksConfig {
     }
 
     private static levelTwo(canvas: HTMLCanvasElement): BrickLevel {
-        const gap = 10;
+        const gap = BRICK_SETTINGS.gap;
         const x = this.calculateCanvasCenter(gap, canvas.width);
         const y = canvas.height * 0.1;
         return {
@@ -104,7 +104,7 @@ export class BricksConfig {
     }
 
     private static levelThree(canvas: HTMLCanvasElement): BrickLevel {
-        const gap = 10;
+        const gap = BRICK_SETTINGS.gap;
         const x = this.calculateCanvasCenter(gap, canvas.width);
         const y = canvas.height * 0.1;
         return {

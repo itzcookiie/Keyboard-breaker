@@ -1,4 +1,4 @@
-import { SoundAlias } from "../types";
+import { SoundAlias } from "./types";
 
 
 enum SoundAliasToPath {

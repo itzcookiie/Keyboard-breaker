@@ -16,7 +16,9 @@ export const BRICK_SETTINGS = {
     width: 50,
     height: 50,
     color: COLORS.WHITE,
-    padding: 20
+    padding: 20,
+    gap: 5,
+    margin: 20
 };
 
 export const KEY_SETTINGS = {
@@ -46,6 +48,10 @@ export const SCORE_SETTINGS = {
     xOffset: 50,
     y: 50,
     color: COLORS.LOGITECH_BLUE
+};
+
+export const ARROW_SETTINGS = {
+    
 };
 
 export const GAME_SETTINGS = {

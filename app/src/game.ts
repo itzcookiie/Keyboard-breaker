@@ -1,7 +1,7 @@
 import Bricks from './entities/bricks';
-import SoundManager from './view/soundManager';
+import SoundManager from './soundManager';
 
-import { Entity, EntityClass, GameLevel, LoadedImage } from './types';
+import { Entity, GenericClass, GameLevel, LoadedImage, UI } from './types';
 import { State } from './state';
 import { GAME_SETTINGS } from './constants';
 import { SoundAlias } from "./types";
@@ -10,8 +10,7 @@ import HtmlUI from './view/htmlUi';
 
 
 class Game {
-    private readonly canvasUI: CanvasUI
-    private readonly htmlUI: HtmlUI
+    private uis: UI[];
     private entities: Entity[];
     readonly images: LoadedImage[];
     readonly soundManager: SoundManager;
@@ -26,12 +25,11 @@ class Game {
 
     constructor(images: LoadedImage[]) {
         this.soundManager = new SoundManager();
-        this.canvasUI = new CanvasUI(this);
-        this.htmlUI = new HtmlUI(this);
         this.lives = GAME_SETTINGS.lives;
         this.timestamp = 0;
         this.score = 0;
         this.entities = [];
+        this.uis = [];
         this.level = GameLevel.ONE;
         this.state = State.BALL_HOLD;
         this.images = images;
@@ -43,12 +41,20 @@ class Game {
         this.soundManager.playSound(SoundAlias.BACKGROUND);
     }
 
-    getEntity(entityClass: EntityClass<Entity>): Entity | undefined {
+    getEntity(entityClass: GenericClass<Entity>): Entity | undefined {
         return this.entities.find(entity => entity instanceof entityClass);
     }
 
-    getEntities(...entityClasses: EntityClass<Entity>[]): Entity[] | undefined {
+    getEntities(...entityClasses: GenericClass<Entity>[]): Entity[] | undefined {
         return this.entities.filter(entity => entityClasses.some(entityClass => entity instanceof entityClass));
+    }
+
+    getUi(uiClass: GenericClass<UI>): UI | undefined {
+        return this.uis.find(ui => ui instanceof uiClass);
+    }
+
+    getUis(...entityClasses: GenericClass<UI>[]): UI[] | undefined {
+        return this.uis.filter(ui => entityClasses.some(uiClass => ui instanceof uiClass));
     }
 
     draw() {
@@ -56,6 +62,9 @@ class Game {
         const ctx = this.context;
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.entities.forEach(entityObj => entityObj.draw());
+        this.uis.forEach(ui => {
+            if(ui instanceof CanvasUI) ui.draw();
+        })
 
         if(this.gameLevelFinished()) {
             this.state = State.NEXT_LEVEL;
@@ -96,11 +105,19 @@ class Game {
         this.canvas.height = this.canvas.width / aspectRatio;
     }
 
-    registerEntity(entity: EntityClass<Entity>) {
+    registerEntity(entity: GenericClass<Entity>) {
         this.entities.push(new entity(this));
     }
 
-    registerEntities(...args: EntityClass<Entity>[]) {
+    registerUi(entity: GenericClass<UI>) {
+        this.uis.push(new entity(this));
+    }
+
+    registerUis(...args: GenericClass<UI>[]) {
+        args.forEach(ui => this.registerUi(ui));
+    }
+
+    registerEntities(...args: GenericClass<Entity>[]) {
         args.forEach(entity => this.registerEntity(entity));
     }
 
@@ -120,7 +137,9 @@ class Game {
     }
 
     onGameOver() {
-        this.htmlUI.showGameOverPopUp();
+        const htmlUI = this.getUi(HtmlUI);
+        if(!(htmlUI instanceof HtmlUI)) return;
+        htmlUI.showGameOverPopUp();
     }
 
     reset() {
@@ -129,8 +148,11 @@ class Game {
         this.level = GameLevel.ONE;
         this.state = State.BALL_HOLD;
         this.entities.forEach(entityObj => entityObj.reset());
-        this.canvasUI.reset();
         this.isGameOver = false;
+        const canvasUI = this.getUi(CanvasUI);
+        if(canvasUI instanceof CanvasUI) {
+            canvasUI.reset();
+        };
         this.startGame();
     }
 

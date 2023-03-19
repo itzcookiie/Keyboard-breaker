@@ -55,7 +55,6 @@ class BallConfig {
                 y
             };
         };
-
     }
 
     private static levelOne(game: Game): BallLevel {

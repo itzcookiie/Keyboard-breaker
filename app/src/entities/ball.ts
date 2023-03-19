@@ -7,6 +7,7 @@ import { State } from "../state";
 
 import { BALL_SETTINGS, BOARD_SETTINGS, GAME_SETTINGS } from "../constants";
 import { BorderCordsSide, Vector, BallLevel, SoundAlias } from '../types';
+import { calculateDirection, roundNumTo2DP } from "../lib";
 
 
 class Ball {
@@ -89,24 +90,30 @@ class Ball {
         // If you hit it at the corners it reflects by like 160 degrees
         // So the further from the center, the larger the angle/the more bent the ball reflects (key idea)
 
-        const boardMidPoint = board.data.x + (BOARD_SETTINGS.width / 2);
-        const distanceFromCenter = collision.x - boardMidPoint;
-        const halfBoardWidth = BOARD_SETTINGS.width / 2;
-        const ratio = distanceFromCenter / halfBoardWidth;
-        this.direction.x = ratio;
-        // this.data.x = collision.x - BALL_SETTINGS.radius;
+        const directionPoint = calculateDirection(this.game, {
+            ...collision
+        });
+        if(!directionPoint) return;
+        this.direction = directionPoint;
 
-        const yCornerComponent = 0.444; // 20 degrees. 45 degrees = 1. 20 degrees = (1 / 45) * 20
-        if(distanceFromCenter > 0) {
-            const yRatio = 1 - ((1 - yCornerComponent) * (ratio));
-            this.direction.y = -yRatio;
-        } else if(distanceFromCenter < 0) {
-            const yRatio = -1 + ((-1 + yCornerComponent) * (ratio));
-            this.direction.y = yRatio;
-        } else {
-            this.direction.y = 1;
-        }
-        this.data.y = collision.y - BALL_SETTINGS.radius;
+        // const boardMidPoint = board.data.x + (BOARD_SETTINGS.width / 2);
+        // const distanceFromCenter = collision.x - boardMidPoint;
+        // const halfBoardWidth = BOARD_SETTINGS.width / 2;
+        // const ratio = distanceFromCenter / halfBoardWidth;
+        // this.direction.x = roundNumTo2DP(ratio);
+        // // this.data.x = collision.x - BALL_SETTINGS.radius;
+
+        // const yCornerComponent = 0.444; // 20 degrees. 45 degrees = 1. 20 degrees = (1 / 45) * 20
+        // if(distanceFromCenter > 0) {
+        //     const yRatio = 1 - roundNumTo2DP((1 - yCornerComponent) * (ratio));
+        //     this.direction.y = -yRatio;
+        // } else if(distanceFromCenter < 0) {
+        //     const yRatio = -1 + roundNumTo2DP((-1 + yCornerComponent) * (ratio));
+        //     this.direction.y = yRatio;
+        // } else {
+        //     this.direction.y = 1;
+        // }
+        // this.data.y = collision.y - BALL_SETTINGS.radius;
 
     }
 
@@ -152,13 +159,19 @@ class Ball {
     }
 
     releaseBall(e: MouseEvent) {
-        if(this.game.state !== State.BALL_HOLD) return;
-        const x = e.offsetX;
-        if(x > (this.game.canvas.offsetWidth / 2)) {
-            this.direction.x = Math.abs(this.direction.x);
-        } else {
-            this.direction.x = -Math.abs(this.direction.x);
-        };
+        // if(this.game.state !== State.BALL_HOLD) return;
+        // const x = e.offsetX;
+        // if(x > (this.game.canvas.offsetWidth / 2)) {
+        //     this.direction.x = Math.abs(this.direction.x);
+        // } else {
+        //     this.direction.x = -Math.abs(this.direction.x);
+        // };
+        const directionPoint = calculateDirection(this.game, {
+            x: e.offsetX,
+            y: e.offsetY
+        });
+        if(!directionPoint) return;
+        this.direction = directionPoint;
         this.game.stateChangeAfterReleaseBall();
     }
 

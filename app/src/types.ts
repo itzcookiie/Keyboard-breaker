@@ -2,9 +2,12 @@ import Game from "./game";
 import Ball from "./entities/ball";
 import Board from "./entities/board";
 import Bricks from "./entities/bricks";
+import HtmlUI from "./view/htmlUi";
+import CanvasUI from "./view/canvasUi";
 
 export type Entity = Bricks | Board | Ball;
-export type EntityClass<T> = new (game: Game) => T;
+export type UI = HtmlUI | CanvasUI;
+export type GenericClass<T> = new (game: Game) => T;
 
 export enum GameLevel {
     ONE,
@@ -60,7 +63,8 @@ export enum UIElementType {
 
 export enum UIElement {
     SCORE = 'score',
-    HEART_ICONS = 'heartIcons'
+    HEART_ICON = 'heart',
+    ARROW = 'arrow'
 };
 
 export interface UIElementData {
