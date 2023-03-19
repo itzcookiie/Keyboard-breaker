@@ -16,10 +16,7 @@ type BrickLevels = {
 export class BricksConfig {
     // Add constructor since we are passing Game and use a lot of it's fields
     private static keys = [
-        ['1234567'],
-        ['QWERTYU'],
-        ['ASDFGHJ'],
-        ['ZXCVBNM'],
+        ['1'],
     ];
 
     private static getConfig(game: Game): BrickLevels[keyof BrickLevels] {

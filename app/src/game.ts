@@ -150,6 +150,9 @@ class Game {
     }
 
     reset() {
+        if (!this.context) return;
+        const ctx = this.context;
+        ctx.restore();
         this.score = 0;
         this.lives = GAME_SETTINGS.lives;
         this.level = GameLevel.ONE;
@@ -157,9 +160,7 @@ class Game {
         this.entities.forEach(entityObj => entityObj.reset());
         this.isGameOver = false;
         const canvasUI = this.getUi(CanvasUI);
-        if(canvasUI instanceof CanvasUI) {
-            canvasUI.reset();
-        };
+        if(canvasUI instanceof CanvasUI) canvasUI.reset();
         this.startGame();
     }
 
