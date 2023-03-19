@@ -1,0 +1,141 @@
+*, *::after, *::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+}
+
+.root {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  height: auto;
+  width: 80vw;
+  position: relative;
+  aspect-ratio: 1366 / 768;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* .container::before {
+  content: '';
+  position: absolute;
+  height: calc(100% + 20px);
+  width: 100%;
+  top: -10px;
+  background: linear-gradient(#ff3d02, #4169e1);
+  animation: glossyBorder 5s linear infinite;
+  border-radius: 10px;
+}
+
+.container::before {
+
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  height: calc(100% + 20px);
+  width: 100%;
+  background-color: black;
+  filter: blur(50px);
+  top: -10px;
+  z-index: -1;
+  inset: 4px;
+} */
+
+.canvas {
+  width: 80vw;
+  /* border: 5px solid #00FFFF; */
+  background-color: #E6E6FA;
+  position: relative;
+}
+
+.game-settings {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  height: 10%;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: yellow;
+}
+
+.game-settings__wrapper {
+  color: black;
+  font-weight: bold;
+}
+
+.game-over-pop-up {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  height: 300px;
+  width: 300px;
+  border-radius: 20px;
+  background-color: royalblue;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-over-pop-up__wrapper {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-over-pop-up__title-wrapper {
+  flex: 1;
+}
+
+.game-over-pop-up__title {
+  color: red;
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.game-over-pop-up__btn-wrapper {
+  width: 100%;
+}
+
+.game-over-pop-up__btn {
+  padding: 5px 0;
+  width: 100%;
+  border-radius: 50px;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  background-color: transparent;
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+.game-over-pop-up__btn:hover {
+  transform: scale(0.98);
+}
+
+@keyframes glossyBorder {
+  0% {
+    rotate: 0deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}

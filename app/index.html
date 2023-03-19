@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div class="root">
+      <div class="container">
+        <canvas width="1366" height="768" id="canvas" class="canvas"></canvas>
+        <section class="game-over-pop-up">
+          <div class="game-over-pop-up__wrapper">
+            <div class="game-over-pop-up__title-wrapper">
+              <p class="game-over-pop-up__title">Game over</p>
+            </div>
+              <div class="game-over-pop-up__btn-wrapper">
+                <button class="game-over-pop-up__btn">Play again</button>
+            </div>
+          </div>
+        </section>
+        <section class="game-settings">
+          <div class="game-settings__wrapper">
+            <p>Press M to mute background music</p>
+            <p>Press A to mute all music</p>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
