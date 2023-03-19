@@ -16,7 +16,7 @@ window.document.addEventListener('DOMContentLoaded', async() => {
     const images = await loadImages(IMAGES, GCLOUD_BASE_URL);
     const game = new Game(images);
     game.init();
-    game.registerEntities(...Object.values(entities));
+    game.registerEntities(entities.Bricks, entities.Board, entities.Ball);
     game.registerUis(...Object.values(uis));
     game.startGame();
 })

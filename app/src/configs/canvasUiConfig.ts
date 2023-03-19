@@ -1,6 +1,6 @@
 import Game from "../game";
 
-import { BALL_SETTINGS, GAME_SETTINGS, SCORE_SETTINGS } from "../constants";
+import { GAME_SETTINGS, SCORE_SETTINGS } from "../constants";
 import { UIElement, UIElementData, UIElementType } from "../types";
 import { Ball } from "../entities";
 import BallConfig from "./ballConfig";
@@ -28,7 +28,7 @@ class CanvasUIConfig {
     static generateScorePositions(): UIElementData {
         return {
             name: UIElement.SCORE,
-            cords: Array.from({ length: 1 }, (_, i) => ({
+            cords: Array.from({ length: 1 }, () => ({
                 x: SCORE_SETTINGS.xOffset,
                 y: SCORE_SETTINGS.y
             })),
@@ -44,7 +44,7 @@ class CanvasUIConfig {
             const y = ball.data.y;
             return {
                 name: UIElement.ARROW,
-                cords: Array.from({ length: 1 }, (_, i) => ({
+                cords: Array.from({ length: 1 }, () => ({
                     x,
                     y
                 })),
@@ -57,7 +57,7 @@ class CanvasUIConfig {
             const y = ballY;
             return {
                 name: UIElement.ARROW,
-                cords: Array.from({ length: 1 }, (_, i) => ({
+                cords: Array.from({ length: 1 }, () => ({
                     x,
                     y
                 })),

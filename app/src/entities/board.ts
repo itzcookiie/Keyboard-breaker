@@ -1,6 +1,6 @@
 import Game from '../game';
 import { BOARD_SETTINGS } from '../constants';
-import { BorderCords, BorderCordsData, BorderCordsSide } from '../types';
+import { BorderCordsData } from '../types';
 import BoardConfig from '../configs/boardConfig';
 import { Vector } from '../types';
 import { getBorderCords } from '../lib';
@@ -45,9 +45,6 @@ class Board {
 
     moveBoard(e: MouseEvent) {
         if(!this.game.canvas || this.game.state !== State.GAMEPLAY) return;
-        const x = e.offsetX;
-        const canvasLength = this.game.canvas.offsetWidth;
-
         // If you move the mouse really fast past edge of canvas border left or right
         // The paddle won't move all the way to the  end. It will only get as far as it last recorded
         // Potential fixes:

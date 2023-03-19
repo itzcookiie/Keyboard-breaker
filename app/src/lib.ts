@@ -1,8 +1,8 @@
 import { BOARD_SETTINGS } from './constants';
-import { Board, Bricks } from './entities';
+import { Board } from './entities';
 import Game from './game';
 import { State } from './state';
-import { BorderCords, BorderCordsData, BorderCordsSide, Entity, LoadedImage, Settings, SingleEntity, Vector } from './types';
+import { BorderCords, BorderCordsData, BorderCordsSide, LoadedImage, Settings, SingleEntity, Vector } from './types';
 
 
 interface BorderCordsPropsData {
@@ -75,9 +75,9 @@ export function getAllBorderCords<BorderCordsPropsEntity>({ entity, data }: Bord
 
 export const loadImages = (images: Pick<LoadedImage, 'name' | 'path'>[], baseUrl: string): Promise<LoadedImage[]> => {
     return Promise.all(images.map(imageData => {
-        return new Promise<LoadedImage>((resolve, reject) => {
+        return new Promise<LoadedImage>(resolve => {
             const image = new Image();
-            image.addEventListener('load', function (e) {
+            image.addEventListener('load', function () {
                 resolve({ ...imageData, element: this })
             });
             image.src = `${baseUrl}${imageData.path}`;

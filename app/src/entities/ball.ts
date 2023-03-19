@@ -1,12 +1,12 @@
 import Game from "../game";
 import Board from "./board";
-import Bricks, { Brick } from "./bricks";
+import Bricks from "./bricks";
 
 import BallConfig from "../configs/ballConfig";
 import { State } from "../state";
 
 import { BALL_SETTINGS, BOARD_SETTINGS, BRICK_SETTINGS, GAME_SETTINGS } from "../constants";
-import { BorderCordsSide, Vector, BallLevel, SoundAlias } from '../types';
+import { Vector, BallLevel, SoundAlias } from '../types';
 import { calculateBallDirection, calculateMouseDirection } from "../lib";
 
 

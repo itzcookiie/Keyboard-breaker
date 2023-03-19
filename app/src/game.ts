@@ -101,7 +101,7 @@ class Game {
         }
     }
 
-    resizeCanvas(e: UIEvent) {
+    resizeCanvas() {
         this.canvas.width = this.canvas.offsetWidth;
         const aspectRatio = 1366 / 768;
         this.canvas.height = this.canvas.width / aspectRatio;
@@ -134,11 +134,11 @@ class Game {
         this.canvas.addEventListener('STATE:OUT_OF_PLAY', this.onBallHitsGround.bind(this))
     }
 
-    stateChangeAfterReleaseBall(e: Event) {
+    stateChangeAfterReleaseBall() {
         this.state = State.GAMEPLAY;
     }
 
-    onBallHitsGround(e: Event) {
+    onBallHitsGround() {
         this.lives--;
         this.state = State.OUT_OF_PLAY;
     }

@@ -62,7 +62,7 @@ export class BricksConfig {
     }
 
     static generateKeyPositions(game: Game): BrickData[] {
-        const { startPos, gap } = this.getConfig(game);
+        const { startPos } = this.getConfig(game);
         const [xStartPos, yStartPos] = startPos;
         return this.keys.flatMap((keyRow, rowIndex) => 
             keyRow.join('').split('').map((key, colIndex) => ({
@@ -79,7 +79,7 @@ export class BricksConfig {
 
     private static calculateCanvasCenter(gap: number, canvasWidth: number): number {
         const numKeysInARow = this.calculateKeysInARow();
-        const rowDistance = canvasWidth - ((numKeysInARow - 1) * (KEY_SETTINGS.width + BRICK_SETTINGS.gap + BRICK_SETTINGS.padding));
+        const rowDistance = canvasWidth - ((numKeysInARow - 1) * (KEY_SETTINGS.width + gap + BRICK_SETTINGS.padding));
         return rowDistance / 2;
     }
 
