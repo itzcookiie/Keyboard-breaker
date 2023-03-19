@@ -1,12 +1,11 @@
 import Game from "../game";
 
-import UIConfig from "../configs/uiConfig";
+import CanvasUIConfig from "../configs/canvasUiConfig";
 
 import { BOARD_SETTINGS, SCORE_SETTINGS } from "../constants";
 import { State } from "../state";
 import { LoadedImage, UIElement, UIElementData, UIElementType, Vector } from "../types";
-import { Ball, Board } from "../entities";
-import { calculateDirection, roundNumTo2DP } from "../lib";
+import { calculateMouseDirection } from "../lib";
 
 
 class CanvasUI {
@@ -17,7 +16,7 @@ class CanvasUI {
 
     constructor(game: Game) {
         this.game = game;
-        this.data = UIConfig.generatePositions(game);
+        this.data = CanvasUIConfig.generatePositions(game);
         this.images = this.game.images;
         this.direction = {
             x: 0,
@@ -35,7 +34,7 @@ class CanvasUI {
             }
         })
         if(this.game.state === State.BALL_HOLD) {
-            this.reset();
+            this.addArrow();
         } else if(this.game.state === State.OUT_OF_PLAY) {
             this.data.forEach(uiElementData => {
                 if(uiElementData.name === UIElement.HEART_ICON) {
@@ -145,16 +144,19 @@ class CanvasUI {
         this.data = this.data.filter(uiElementData => uiElementData.name !== UIElement.ARROW);
     }
 
+    addArrow() {
+        this.removeArrow(); // So arrows don't stack up/draw on top of each other
+        this.data.push(CanvasUIConfig.generateArrowPositions(this.game));
+    }
+
     reset() {
-        this.data = UIConfig.generatePositions(this.game);
+        this.data = CanvasUIConfig.generatePositions(this.game);
     }
 
     attachEventListeners() {
         this.game.canvas.addEventListener('mousemove', (e: MouseEvent) => {
-            const directionPoint = calculateDirection(this.game, {
-                x: e.offsetX,
-                y: e.offsetY
-            });
+            if(this.game.state !== State.BALL_HOLD) return;
+            const directionPoint = calculateMouseDirection(this.game, e.offsetX, BOARD_SETTINGS);
             if(!directionPoint) return;
             this.direction = directionPoint;
         });

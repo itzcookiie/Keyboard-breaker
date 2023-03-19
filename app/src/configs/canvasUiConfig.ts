@@ -12,30 +12,32 @@ const HEART_IMAGE_SETTINGS = {
     y: 50
 };
 
-class UIConfig {
-    private static generateHeartIconPositions(canvas: HTMLCanvasElement): UIElementData {
+class CanvasUIConfig {
+    static generateHeartIconPositions(canvas: HTMLCanvasElement): UIElementData {
         return {
             name: UIElement.HEART_ICON,
             cords: Array.from({ length: GAME_SETTINGS.lives }, (_, i) => ({
                 x: canvas.width - HEART_IMAGE_SETTINGS.xOffset - (i * HEART_IMAGE_SETTINGS.gap),
                 y: HEART_IMAGE_SETTINGS.y,
             })),
-            type: UIElementType.IMAGE
+            type: UIElementType.IMAGE,
+            draw: true
         };
     }
 
-    private static generateScorePositions(): UIElementData {
+    static generateScorePositions(): UIElementData {
         return {
             name: UIElement.SCORE,
             cords: Array.from({ length: 1 }, (_, i) => ({
                 x: SCORE_SETTINGS.xOffset,
                 y: SCORE_SETTINGS.y
             })),
-            type: UIElementType.TEXT
+            type: UIElementType.TEXT,
+            draw: true
         };
     }
 
-    private static generateArrowPositions(game: Game): UIElementData {
+    static generateArrowPositions(game: Game): UIElementData {
         const ball = game.getEntity(Ball);
         if(ball instanceof Ball) {
             const x = ball.data.x;
@@ -46,7 +48,8 @@ class UIConfig {
                     x,
                     y
                 })),
-                type: UIElementType.TEXT
+                type: UIElementType.TEXT,
+                draw: true
             };
         } else {
             const {x: ballX, y: ballY} = BallConfig.getPositions(game);
@@ -58,7 +61,8 @@ class UIConfig {
                     x,
                     y
                 })),
-                type: UIElementType.TEXT
+                type: UIElementType.TEXT,
+                draw: true
             };
         };
     }
@@ -72,4 +76,4 @@ class UIConfig {
     }
 }
 
-export default UIConfig;
+export default CanvasUIConfig;

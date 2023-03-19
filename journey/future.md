@@ -14,4 +14,4 @@
 - Move all music to google cloud storage and download to project
 - Add arrows to ball, so user can decide where to release it
 - Add timer
-- Add settings box e.g. PRESS B to toggle background music, press M to toggle all sounds
+- Add settings box e.g. PRESS B to toggle background music, press M to toggle all sounds ✅

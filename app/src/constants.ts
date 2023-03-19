@@ -1,3 +1,5 @@
+export const GCLOUD_BASE_URL = 'https://storage.googleapis.com/keyboard-breaker-assets';
+
 export const COLORS = {
     AQUA: '#00FFFF',
     ORANGE: '#FFAC1C',
@@ -17,8 +19,7 @@ export const BRICK_SETTINGS = {
     height: 50,
     color: COLORS.WHITE,
     padding: 20,
-    gap: 5,
-    margin: 20
+    gap: 1
 };
 
 export const KEY_SETTINGS = {
@@ -31,12 +32,12 @@ export const BALL_SETTINGS = {
     radius: 10,
     color: COLORS.WHITE,
     level1: {
-        xVelocity: 2.5,
-        yVelocity: 2.5
+        xVelocity: 5.5,
+        yVelocity: 5.5
     },
     level2: {
-        xVelocity: 2.5,
-        yVelocity: 2.5
+        xVelocity: 5.5,
+        yVelocity: 5.5
     },
     level3: {
         xVelocity: 5.5,

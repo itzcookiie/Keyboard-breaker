@@ -64,13 +64,15 @@ class Game {
         this.entities.forEach(entityObj => entityObj.draw());
         this.uis.forEach(ui => {
             if(ui instanceof CanvasUI) ui.draw();
-        })
+        });
+        this.handleState();
+    }
 
-        if(this.gameLevelFinished()) {
-            this.state = State.NEXT_LEVEL;
-        };
-
+    handleState() {
+        if (!this.context) return;
+        const ctx = this.context;
         if(this.state === State.GAMEPLAY) {
+            if(this.gameLevelFinished()) this.state = State.NEXT_LEVEL;
             // this.entities.forEach(entityObj => entityObj.draw());
         } else if(this.state === State.OUT_OF_PLAY) {
             this.lives === 0 ? this.state = State.GAME_OVER : this.state = State.BALL_HOLD;
@@ -127,11 +129,16 @@ class Game {
         return bricks.data.length === 0;
     }
 
-    stateChangeAfterReleaseBall() {
+    addStateChangeEventListeners() {
+        this.canvas.addEventListener('STATE:GAMEPLAY', this.stateChangeAfterReleaseBall.bind(this))
+        this.canvas.addEventListener('STATE:OUT_OF_PLAY', this.onBallHitsGround.bind(this))
+    }
+
+    stateChangeAfterReleaseBall(e: Event) {
         this.state = State.GAMEPLAY;
     }
 
-    onBallHitsGround() {
+    onBallHitsGround(e: Event) {
         this.lives--;
         this.state = State.OUT_OF_PLAY;
     }
@@ -166,9 +173,12 @@ class Game {
         // window.addEventListener('resize', this.resizeCanvas.bind(this));
         window.document.addEventListener('keydown', (e) => {
             if(e.code === 'KeyM') {
+                this.soundManager.toggleMuteBackground();
+            } else if(e.code === 'KeyA') {
                 this.soundManager.toggle();
             }
         });
+        this.addStateChangeEventListeners();
     }
 }
 

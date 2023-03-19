@@ -5,7 +5,7 @@ import * as entities from './entities/index'
 import * as uis from './view/index'
 
 import { loadImages } from './lib';
-
+import { GCLOUD_BASE_URL } from './constants';
 
 const IMAGES = [
     {name: 'heart', path: '/heart.png'},
@@ -13,7 +13,7 @@ const IMAGES = [
 ];
 
 window.document.addEventListener('DOMContentLoaded', async() => {
-    const images = await loadImages(IMAGES);
+    const images = await loadImages(IMAGES, GCLOUD_BASE_URL);
     const game = new Game(images);
     game.init();
     game.registerEntities(...Object.values(entities));

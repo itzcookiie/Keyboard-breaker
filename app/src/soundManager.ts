@@ -1,4 +1,11 @@
+import { GCLOUD_BASE_URL } from "./constants";
 import { SoundAlias } from "./types";
+
+
+interface Muted {
+    background: boolean;
+    all: boolean;
+}
 
 
 enum SoundAliasToPath {
@@ -28,29 +35,42 @@ const SOUNDS: PreProcessedSoundData[] = Object.values(SoundAlias).map(soundAlias
 
 class SoundManager {
     sounds: PostProcessedSoundData[];
-    muted: boolean;
+    muted: Muted;
 
     constructor() {
-        this.muted = true;
-        this.sounds = this.processSounds(SOUNDS);
+        this.muted = {
+            background: false,
+            all: false
+        };
+        this.sounds = this.processSounds(SOUNDS, GCLOUD_BASE_URL);
     }
 
     playSound(soundAlias: SoundAlias) {
-        if(this.muted) return;
+        if(this.muted.all) return;
         this.stopSounds();
-        this.resumeBackgroundSound();
+        if(!this.muted.background) this.resumeBackgroundSound();
         this.sounds.find(sound => sound.id === soundAlias)?.audio.play();
     }
 
     toggle() {
-        this.muted = !this.muted;
-        this.muted ? this.stopSounds() : this.resumeBackgroundSound();
+        this.muted.all = !this.muted.all;
+        this.muted.background = false;
+        this.muted.all ? this.stopSounds() : this.resumeBackgroundSound();
     }
 
-    private processSounds(sounds: PreProcessedSoundData[]): PostProcessedSoundData[] {
+    toggleMuteBackground() {
+        this.muted.background = !this.muted.background;
+        this.muted.background 
+        ? this.sounds.forEach(sound => {
+            if(sound.id === SoundAlias.BACKGROUND) sound.audio.pause();
+        })
+        :  this.resumeBackgroundSound();
+    }
+
+    private processSounds(sounds: PreProcessedSoundData[], baseUrl: string): PostProcessedSoundData[] {
         return sounds.map(sound => ({
             id: sound.id,
-            audio: new Audio(sound.name)
+            audio: new Audio(`${baseUrl}${sound.name}`)
         }))
     }
 

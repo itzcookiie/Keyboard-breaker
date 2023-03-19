@@ -28,7 +28,7 @@ body {
   overflow: hidden;
 }
 
-.container::before {
+/* .container::before {
   content: '';
   position: absolute;
   height: calc(100% + 20px);
@@ -49,17 +49,34 @@ body {
   height: calc(100% + 20px);
   width: 100%;
   background-color: black;
-  /* filter: blur(50px); */
+  filter: blur(50px);
   top: -10px;
   z-index: -1;
   inset: 4px;
-}
+} */
 
 .canvas {
   width: 80vw;
   /* border: 5px solid #00FFFF; */
   background-color: #E6E6FA;
   position: relative;
+}
+
+.game-settings {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  height: 10%;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: yellow;
+}
+
+.game-settings__wrapper {
+  color: black;
+  font-weight: bold;
 }
 
 .game-over-pop-up {

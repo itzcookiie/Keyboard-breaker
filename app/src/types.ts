@@ -1,11 +1,12 @@
 import Game from "./game";
 import Ball from "./entities/ball";
 import Board from "./entities/board";
-import Bricks from "./entities/bricks";
+import Bricks, { Brick } from "./entities/bricks";
 import HtmlUI from "./view/htmlUi";
 import CanvasUI from "./view/canvasUi";
 
 export type Entity = Bricks | Board | Ball;
+export type SingleEntity = Exclude<Entity, Bricks> | Brick;
 export type UI = HtmlUI | CanvasUI;
 export type GenericClass<T> = new (game: Game) => T;
 
@@ -29,9 +30,7 @@ export enum BorderCordsSide {
     LEFT = 'LEFT',
     TOP = 'TOP',
     RIGHT = 'RIGHT',
-    BOTTOM = 'BOTTOM',
-    LEFT_CORNER = 'LEFT_CORNER',
-    RIGHT_CORNER = 'RIGHT_CORNER',
+    BOTTOM = 'BOTTOM'
 };
 
 export interface BorderCords extends Vector {
@@ -71,6 +70,7 @@ export interface UIElementData {
     name: UIElement;
     cords: Vector[];
     type: UIElementType;
+    draw: boolean;
 };
 
 export enum SoundAlias {
@@ -79,3 +79,7 @@ export enum SoundAlias {
     GROUND_HIT = 'GROUND_HIT',
     WALL_HIT = 'WALL_HIT'
 };
+
+export interface Settings {
+    width: number;
+}

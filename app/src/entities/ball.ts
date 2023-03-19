@@ -5,9 +5,9 @@ import Bricks, { Brick } from "./bricks";
 import BallConfig from "../configs/ballConfig";
 import { State } from "../state";
 
-import { BALL_SETTINGS, BOARD_SETTINGS, GAME_SETTINGS } from "../constants";
+import { BALL_SETTINGS, BOARD_SETTINGS, BRICK_SETTINGS, GAME_SETTINGS } from "../constants";
 import { BorderCordsSide, Vector, BallLevel, SoundAlias } from '../types';
-import { calculateDirection, roundNumTo2DP } from "../lib";
+import { calculateBallDirection, calculateMouseDirection } from "../lib";
 
 
 class Ball {
@@ -74,8 +74,8 @@ class Ball {
         if(this.data.y >= this.game.canvas.height) {
             console.log('Ball went out of play!');
             this.direction.y *= -1;
-            this.game.onBallHitsGround();
             this.game.soundManager.playSound(SoundAlias.GROUND_HIT);
+            this.game.canvas.dispatchEvent(new CustomEvent('STATE:OUT_OF_PLAY'));
         }
     }
 
@@ -90,10 +90,15 @@ class Ball {
         // If you hit it at the corners it reflects by like 160 degrees
         // So the further from the center, the larger the angle/the more bent the ball reflects (key idea)
 
-        const directionPoint = calculateDirection(this.game, {
-            ...collision
-        });
+
+        const directionPoint = calculateBallDirection(board, collision.x, this.direction, BOARD_SETTINGS);
         if(!directionPoint) return;
+        // this.direction.x = directionPoint.x;
+        // if(this.direction.y > 0) {
+        //     this.direction.y = -directionPoint.y;
+        // } else {
+        //     this.direction.y = directionPoint.y;
+        // }
         this.direction = directionPoint;
 
         // const boardMidPoint = board.data.x + (BOARD_SETTINGS.width / 2);
@@ -123,21 +128,50 @@ class Ball {
         const collidedBrick = bricks.getBricksBorderCordsData().find(brickBorderCordData => 
             brickBorderCordData.cords.some(cord => this.isColliding({x: cord.x, y: cord.y}))
         );
-        if(collidedBrick && collidedBrick.entity instanceof Brick) {
+        if(collidedBrick) {
             console.log('Ball and brick collision!');
+            // const collisionPoints = collidedBrick.cords.filter(cord => this.isColliding({x: cord.x, y: cord.y}));
+            // const collisionSides = collisionPoints.map(collisionPoint => collisionPoint.side);
+            // if(!collisionSides.length) return;
+            // if(collisionSides.includes(BorderCordsSide.LEFT) && collisionSides.includes(BorderCordsSide.TOP)) {
+            //     this.direction.y *= -1;
+            //     // this.data.x = board.data.x - BALL_SETTINGS.radius;
+            // } else if(collisionSides.includes(BorderCordsSide.RIGHT) && collisionSides.includes(BorderCordsSide.TOP)) {
+            //     this.direction.y *= -1;
+            // } else if(collisionSides.includes(BorderCordsSide.RIGHT) || collisionSides.includes(BorderCordsSide.LEFT)) {
+            //     this.direction.x *= -1;
+            // }
+            // else {
+            //     this.direction.y *= -1;
+            // }
+
             const collision = collidedBrick.cords.find(cord => this.isColliding({x: cord.x, y: cord.y}));
             if (!collision) return;
-            if(collision.side === BorderCordsSide.LEFT || collision.side === BorderCordsSide.RIGHT) {
-                this.direction.x *= -1;
-                // this.data.x = board.data.x - BALL_SETTINGS.radius;
-            } else if(collision.side === BorderCordsSide.LEFT_CORNER) {
-                this.direction.y *= -1;
-            } else if(collision.side === BorderCordsSide.RIGHT_CORNER) {
-                this.direction.y *= -1;
-            }
-            else {
-                this.direction.y *= -1;
-            }
+            console.log(collision)
+            const directionPoint = calculateBallDirection(collidedBrick.entity, collision.x, this.direction, BRICK_SETTINGS);
+            if(!directionPoint) return;
+            console.log(directionPoint)
+            // this.direction.x = directionPoint.x;
+            // if(this.direction.y > 0) {
+            //     this.direction.y = -directionPoint.y;
+            // } else {
+            //     this.direction.y = directionPoint.y;
+            // };
+            this.direction = directionPoint;
+
+            // const collision = collidedBrick.cords.find(cord => this.isColliding({x: cord.x, y: cord.y}));
+            // if (!collision) return;
+            // if(collision.side === BorderCordsSide.LEFT || collision.side === BorderCordsSide.RIGHT) {
+            //     this.direction.x *= -1;
+            //     // this.data.x = board.data.x - BALL_SETTINGS.radius;
+            // } else if(collision.side === BorderCordsSide.LEFT_CORNER) {
+            //     this.direction.y *= -1;
+            // } else if(collision.side === BorderCordsSide.RIGHT_CORNER) {
+            //     this.direction.y *= -1;
+            // }
+            // else {
+            //     this.direction.y *= -1;
+            // }
             this.game.score += GAME_SETTINGS.pointsPerBrick;
             this.game.soundManager.playSound(SoundAlias.BRICK_HIT);
             bricks.destroyBrick(collidedBrick.entity);
@@ -160,19 +194,11 @@ class Ball {
 
     releaseBall(e: MouseEvent) {
         // if(this.game.state !== State.BALL_HOLD) return;
-        // const x = e.offsetX;
-        // if(x > (this.game.canvas.offsetWidth / 2)) {
-        //     this.direction.x = Math.abs(this.direction.x);
-        // } else {
-        //     this.direction.x = -Math.abs(this.direction.x);
-        // };
-        const directionPoint = calculateDirection(this.game, {
-            x: e.offsetX,
-            y: e.offsetY
-        });
+        const directionPoint = calculateMouseDirection(this.game, e.offsetX, BOARD_SETTINGS);
         if(!directionPoint) return;
-        this.direction = directionPoint;
-        this.game.stateChangeAfterReleaseBall();
+        this.direction.x = directionPoint.x;
+        this.direction.y = -directionPoint.y;
+        this.game.canvas.dispatchEvent(new CustomEvent('STATE:GAMEPLAY'));
     }
 
     attachEventListener() {
